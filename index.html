@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Emmapel — Visitas</title>
+
+<!-- ── PWA: iOS ── -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Emmapel Visitas">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230D1B4B'/%3E%3Crect x='80' y='80' width='160' height='160' rx='20' fill='%23AAFF00'/%3E%3Crect x='80' y='272' width='160' height='160' rx='20' fill='%231A3A7A'/%3E%3Crect x='272' y='80' width='160' height='160' rx='20' fill='%231A3A7A'/%3E%3Crect x='272' y='272' width='160' height='160' rx='20' fill='%23AAFF00'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0D1B4B">
+
+<!-- ── PWA: manifest inline ── -->
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Emmapel%20Visitas%22%2C%22short_name%22%3A%22Visitas%22%2C%22description%22%3A%22Registro%20de%20visitas%20Emmapel%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230D1B4B%22%2C%22theme_color%22%3A%22%230D1B4B%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%25200%2520512%2520512%27%253E%253Crect%2520width%3D%27512%27%2520height%3D%27512%27%2520rx%3D%27100%27%2520fill%3D%27%25230D1B4B%27%2F%253E%253Crect%2520x%3D%2780%27%2520y%3D%2780%27%2520width%3D%27160%27%2520height%3D%27160%27%2520rx%3D%2720%27%2520fill%3D%27%2523AAFF00%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --az:#0D1B4B;--azm:#1A3A7A;--azl:#2255AA;
+  --vd:#AAFF00;--vdo:#88CC00;
+  --bl:#FFFFFF;--gr:#F4F6FB;--grb:#E0E6F0;
+  --tx:#1A1A2E;--txl:#5A6480;
+  --ro:#FF4444;--rol:#FFD6D6;
+  --na:#FF8C00;--nal:#FFE8C0;
+  --am:#FFD600;--aml:#FFF8D6;
+  --vdl:#D6FFD6;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--gr);color:var(--tx);overflow:hidden}
+.app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;background:var(--bl);box-shadow:0 0 40px rgba(0,0,0,.15)}
+
+/* header */
+.hdr{background:var(--az);padding:14px 16px 10px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.hlogo{width:40px;height:40px;background:var(--vd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--az);flex-shrink:0}
+.htitle{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--bl)}
+.hsub{font-size:11px;color:rgba(255,255,255,.5)}
+.hbadge{margin-left:auto;background:var(--vd);color:var(--az);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;padding:4px 10px;border-radius:20px;white-space:nowrap;cursor:pointer;flex-shrink:0}
+
+/* sync pill */
+.sync-pill{display:flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0}
+.sync-ok{background:rgba(170,255,0,.15);color:var(--vd)}
+.sync-pend{background:rgba(255,140,0,.2);color:#FFB060;animation:pulse 1.5s infinite}
+.sync-off{background:rgba(255,68,68,.15);color:#FF8080}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* content */
+.cnt{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:74px}
+.page{display:none}.page.active{display:block}
+
+/* bottom nav */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--az);display:flex;border-top:1px solid rgba(255,255,255,.1);z-index:100}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;cursor:pointer;border:none;background:none;position:relative}
+.nb.active{background:rgba(170,255,0,.1)}
+.nb .ni{font-size:20px}.nb .nl{font-size:10px;color:rgba(255,255,255,.5);margin-top:3px;font-weight:500}
+.nb.active .nl{color:var(--vd)}
+.nb.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:2px;background:var(--vd);border-radius:0 0 4px 4px}
+/* badge on nav */
+.nb-dot{position:absolute;top:6px;right:calc(50% - 16px);width:8px;height:8px;background:var(--na);border-radius:50%;border:2px solid var(--az)}
+
+/* sections */
+.stitle{padding:18px 16px 4px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:var(--az)}
+.ssub{padding:0 16px 14px;font-size:12px;color:var(--txl)}
+
+/* form */
+.fwrap{padding:12px 12px 0}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--txl);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--grb);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--tx);background:var(--bl);outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--azl)}
+.field textarea{resize:none;height:70px}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6480' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* chips */
+.chips{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.chip{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:10px;border:2px solid var(--grb);cursor:pointer;transition:all .15s}
+.chip.sel-vend{border-color:#006600;background:var(--vdl)}
+.chip.sel-no{border-color:var(--ro);background:var(--rol)}
+.chip.sel-repr{border-color:var(--azl);background:#D6E4FF}
+.chip.sel-nofui{border-color:var(--na);background:var(--nal)}
+.cdot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.clbl{font-size:14px;font-weight:500;color:var(--tx)}
+
+/* buttons */
+.btn{width:100%;padding:15px;background:var(--az);color:var(--bl);border:none;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;cursor:pointer;margin:4px 0;transition:opacity .2s;letter-spacing:.3px}
+.btn:active{opacity:.85}
+.btn-green{background:linear-gradient(135deg,#1A8C3A,#128C7E)}
+.btn-orange{background:linear-gradient(135deg,#CC5500,#FF8C00)}
+.btn-grey{background:var(--gr);color:var(--txl)}
+
+/* visita cards */
+.vcard{background:var(--bl);border:1px solid var(--grb);border-radius:12px;margin:0 12px 10px;overflow:hidden;box-shadow:0 2px 8px rgba(13,27,75,.06)}
+.vcard-top{display:flex;align-items:center;gap:8px;padding:12px 14px}
+.vbadge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.vb-vend{background:var(--vdl);color:#006600}
+.vb-no{background:var(--rol);color:#CC0000}
+.vb-repr{background:#D6E4FF;color:#003380}
+.vb-nofui{background:var(--nal);color:#CC5500}
+.vname{font-weight:600;font-size:15px;color:var(--az);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vmeta{padding:0 14px 10px;font-size:12px;color:var(--txl);display:flex;flex-wrap:wrap;gap:5px}
+.vmeta span{background:var(--gr);padding:2px 8px;border-radius:20px}
+.vnote{padding:0 14px 10px;font-size:13px;color:var(--tx);border-top:1px dashed var(--grb);padding-top:8px}
+.vactions{display:flex;gap:6px;padding:0 14px 12px;align-items:center}
+.vbtn-del{padding:5px 12px;background:var(--rol);color:var(--ro);border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer}
+.vsync{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;margin-left:auto}
+.vsync-ok{color:#006600}.vsync-pend{color:#CC6600}.vsync-err{color:#CC0000}
+
+/* stats */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px}
+.sbox{border-radius:12px;padding:14px 10px;text-align:center}
+.snum{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:28px}
+.slbl{font-size:11px;margin-top:2px;line-height:1.3}
+.sa{background:var(--az);color:var(--bl)}.sa .snum{color:var(--vd)}
+.sv{background:var(--vdl)}.sv .snum,.sv .slbl{color:#006600}
+.sp{background:var(--nal)}.sp .snum,.sp .slbl{color:#8B4400}
+.sn{background:var(--rol)}.sn .snum,.sn .slbl{color:#CC0000}
+
+/* empty */
+.empty{text-align:center;padding:40px 24px;color:var(--txl)}
+.empty .ei{font-size:40px;margin-bottom:10px}
+.empty p{font-size:14px}
+
+/* settings */
+.scard{background:var(--bl);border:1px solid var(--grb);border-radius:14px;margin:0 12px 12px;padding:16px;box-shadow:0 2px 8px rgba(13,27,75,.06)}
+.scard h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:var(--az);margin-bottom:4px}
+.scard p{font-size:13px;color:var(--txl);line-height:1.5;margin-bottom:10px}
+.scard .step{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start}
+.scard .stepn{width:22px;height:22px;background:var(--az);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;color:var(--vd);flex-shrink:0;margin-top:1px}
+.scard .stept{font-size:13px;color:var(--tx);line-height:1.5}
+.scard .stept code{background:var(--gr);padding:1px 6px;border-radius:4px;font-size:12px;color:var(--az);font-family:monospace}
+.url-field{width:100%;padding:10px 12px;border:2px solid var(--grb);border-radius:10px;font-size:13px;color:var(--tx);background:var(--gr);outline:none;font-family:'DM Sans',sans-serif;margin-top:4px}
+.url-field:focus{border-color:var(--azl);background:var(--bl)}
+.url-field.ok{border-color:#006600;background:var(--vdl)}
+.url-field.err{border-color:var(--ro);background:var(--rol)}
+.sbtn{padding:10px 18px;border-radius:10px;border:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:opacity .2s}
+.sbtn:active{opacity:.8}
+.sbtn-blue{background:var(--az);color:var(--vd)}
+.sbtn-red{background:var(--rol);color:var(--ro)}
+.info-box{background:var(--aml);border-left:3px solid var(--am);border-radius:0 8px 8px 0;padding:10px 12px;margin:10px 0;font-size:13px;color:#6B4400;line-height:1.5}
+.ok-box{background:var(--vdl);border-left:3px solid #006600;border-radius:0 8px 8px 0;padding:10px 12px;margin:10px 0;font-size:13px;color:#006600;line-height:1.5;font-weight:600}
+.code-block{background:#1A1A2E;border-radius:10px;padding:12px;margin:10px 0;font-size:11px;color:#AAFF00;font-family:monospace;line-height:1.6;overflow-x:auto;white-space:pre}
+
+/* setup wizard */
+.wizard{background:var(--az);margin:12px;border-radius:16px;padding:20px}
+.wizard h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:var(--vd);margin-bottom:6px}
+.wizard p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:16px}
+.wizard-btn{display:block;width:100%;padding:13px;background:var(--vd);color:var(--az);border:none;border-radius:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;cursor:pointer;text-align:center}
+
+/* modal */
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end;max-width:480px;left:50%;transform:translateX(-50%)}
+.moverlay.show{display:flex}
+.modal{background:var(--bl);border-radius:20px 20px 0 0;padding:20px 16px 30px;width:100%;max-height:80vh;overflow-y:auto}
+.modal h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:var(--az);margin-bottom:4px}
+.modal p{font-size:13px;color:var(--txl);margin-bottom:14px}
+.rtxt{background:var(--gr);border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:var(--tx);white-space:pre-wrap;max-height:280px;overflow-y:auto;border:1px solid var(--grb);margin-bottom:14px;font-family:monospace}
+
+/* toast */
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--az);color:var(--vd);padding:8px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:400;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* spinner */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;animation:spin .8s linear infinite}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="hdr">
+    <div class="hlogo">EP</div>
+    <div>
+      <div class="htitle">EMMAPEL</div>
+      <div class="hsub">Registro de Visitas</div>
+    </div>
+    <div id="sync-pill" class="sync-pill sync-ok" onclick="retrySyncAll()" title="Estado de sincronización">
+      <span id="sync-icon">☁️</span>
+      <span id="sync-txt">Sync</span>
+    </div>
+    <div class="hbadge" onclick="openReport()" style="margin-left:8px">📤</div>
+  </div>
+
+  <div class="cnt">
+
+    <!-- ══ NUEVA VISITA ══ -->
+    <div class="page active" id="page-nueva">
+      <div class="stitle">Nueva visita</div>
+      <div class="ssub">Completá al terminar cada visita. Son 30 segundos.</div>
+      <div id="setup-banner"></div>
+      <div class="fwrap">
+        <div class="frow">
+          <div class="field">
+            <label>Fecha</label>
+            <input type="date" id="f-fecha">
+          </div>
+          <div class="field">
+            <label>Turno</label>
+            <select id="f-turno">
+              <option value="">— Elegir —</option>
+              <option>Mañana</option>
+              <option>Tarde</option>
+              <option>Jornada completa</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Vendedor</label>
+          <select id="f-vendedor">
+            <option value="">— Elegir —</option>
+            <option id="opt-v1">Vendedor 1</option>
+            <option id="opt-v2">Vendedor 2</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Cliente / Negocio</label>
+          <input type="text" id="f-cliente" placeholder="Nombre del negocio o persona">
+        </div>
+
+        <div class="field">
+          <label>Rubro</label>
+          <select id="f-rubro">
+            <option value="">— Elegir —</option>
+            <option>Casa de comida / Pizzería</option>
+            <option>Panadería / Confitería</option>
+            <option>Supermercado / Almacén</option>
+            <option>Carnicería</option>
+            <option>Verdulería</option>
+            <option>Cotillón / Eventos</option>
+            <option>Kiosco</option>
+            <option>Mayorista</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Resultado</label>
+          <div class="chips" id="chips">
+            <div class="chip" onclick="selChip('vend',this)" data-val="✅ Vendí">
+              <div class="cdot" style="background:#006600"></div>
+              <div class="clbl">✅ Vendí</div>
+            </div>
+            <div class="chip" onclick="selChip('no',this)" data-val="❌ No compró">
+              <div class="cdot" style="background:#CC0000"></div>
+              <div class="clbl">❌ No compró</div>
+            </div>
+            <div class="chip" onclick="selChip('repr',this)" data-val="📞 Reprogramar">
+              <div class="cdot" style="background:#003380"></div>
+              <div class="clbl">📞 Reprogramar</div>
+            </div>
+            <div class="chip" onclick="selChip('nofui',this)" data-val="🚫 No fui">
+              <div class="cdot" style="background:#CC5500"></div>
+              <div class="clbl">🚫 No fui</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Monto aproximado ($)</label>
+          <input type="number" id="f-monto" placeholder="Ej: 15000" inputmode="numeric">
+        </div>
+
+        <div class="field" id="field-motivo" style="display:none">
+          <label>¿Por qué no compró?</label>
+          <select id="f-motivo">
+            <option value="">— Elegir —</option>
+            <option>Precio alto</option>
+            <option>Ya tiene stock</option>
+            <option>Ya tiene proveedor</option>
+            <option>No tenía plata</option>
+            <option>No estaba el dueño</option>
+            <option>Lo va a pensar</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Notas / observaciones</label>
+          <textarea id="f-notas" placeholder="Qué dijo el cliente, qué productos le mostraste, detalles importantes..."></textarea>
+        </div>
+
+        <button class="btn" id="btn-guardar" onclick="guardarVisita()">💾 Guardar visita</button>
+        <div style="height:12px"></div>
+      </div>
+    </div>
+
+    <!-- ══ VISITAS DE HOY ══ -->
+    <div class="page" id="page-lista">
+      <div id="stats-wrap"></div>
+      <div id="pending-banner"></div>
+      <div class="stitle" style="padding-bottom:8px">Visitas del día</div>
+      <div id="lista-visitas"></div>
+    </div>
+
+    <!-- ══ HISTORIAL ══ -->
+    <div class="page" id="page-historial">
+      <div class="stitle">Historial</div>
+      <div class="ssub">Todas las visitas guardadas en este teléfono.</div>
+      <div id="historial-visitas"></div>
+    </div>
+
+    <!-- ══ CONFIGURACIÓN ══ -->
+    <div class="page" id="page-config">
+      <div class="stitle">⚙️ Configuración</div>
+      <div class="ssub">Conectá la app a Google Sheets para sincronizar automáticamente.</div>
+
+      <!-- Estado actual -->
+      <div id="config-status-box" style="margin:0 12px 12px"></div>
+
+      <!-- Nombre de los vendedores -->
+      <div class="scard">
+        <h3>👤 Nombres de los vendedores</h3>
+        <p>Cambiá los nombres que aparecen en el formulario.</p>
+        <div class="field" style="margin-bottom:8px">
+          <label>Vendedor 1</label>
+          <input type="text" id="cfg-v1" class="url-field" placeholder="Nombre del primer vendedor">
+        </div>
+        <div class="field" style="margin-bottom:12px">
+          <label>Vendedor 2</label>
+          <input type="text" id="cfg-v2" class="url-field" placeholder="Nombre del segundo vendedor">
+        </div>
+        <button class="sbtn sbtn-blue" onclick="saveVendedores()">Guardar nombres</button>
+      </div>
+
+      <!-- Google Sheets -->
+      <div class="scard">
+        <h3>📊 Conectar con Google Sheets</h3>
+        <p>Seguí estos pasos UNA sola vez. Después la sincronización es automática.</p>
+
+        <div class="step"><div class="stepn">1</div><div class="stept">Creá un <strong>Google Sheet</strong> nuevo en <a href="https://sheets.google.com" target="_blank" style="color:var(--azl)">sheets.google.com</a>. Nombralo "Visitas Emmapel".</div></div>
+
+        <div class="step"><div class="stepn">2</div><div class="stept">En el Sheet, andá a <code>Extensiones → Apps Script</code>.</div></div>
+
+        <div class="step"><div class="stepn">3</div><div class="stept">Borrá todo lo que hay y pegá este código exacto:</div></div>
+
+        <div class="code-block" id="apps-script-code">function doPost(e){
+  try{
+    var s=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    if(s.getLastRow()===0){
+      s.appendRow(['Timestamp','Fecha','Turno','Vendedor',
+        'Cliente','Rubro','Resultado','Monto ($)',
+        'Motivo no compra','Notas','ID visita']);
+    }
+    var d=JSON.parse(e.postData.contents);
+    s.appendRow([
+      new Date().toLocaleString('es-AR'),
+      d.fecha||'',d.turno||'',d.vendedor||'',
+      d.cliente||'',d.rubro||'',d.resultado||'',
+      d.monto||'',d.motivo||'',d.notas||'',d.id||''
+    ]);
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:true}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }catch(err){
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:false,error:err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+function doGet(e){
+  return ContentService
+    .createTextOutput(JSON.stringify({ok:true,msg:'Emmapel activo'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+        <button class="sbtn sbtn-blue" onclick="copyScript()" style="margin-bottom:12px">📋 Copiar código</button>
+
+        <div class="step"><div class="stepn">4</div><div class="stept">Guardá el proyecto (Ctrl+S). Luego hacé clic en <code>Implementar → Nueva implementación</code>.</div></div>
+
+        <div class="step"><div class="stepn">5</div><div class="stept">En "Tipo", elegí <code>Aplicación web</code>. En "Quién tiene acceso" elegí <code>Cualquier usuario</code>. Hacé clic en <code>Implementar</code>. Autorizá el acceso con tu cuenta Google.</div></div>
+
+        <div class="step"><div class="stepn">6</div><div class="stept">Copiá la <strong>URL de la aplicación web</strong> que aparece al final y pegala acá abajo:</div></div>
+
+        <div class="info-box">⚠️ La URL empieza con <strong>https://script.google.com/macros/s/...</strong> — si no empieza así, revisá el paso 5.</div>
+
+        <div class="field" style="margin-bottom:12px">
+          <label>URL del Apps Script</label>
+          <input type="url" id="cfg-url" class="url-field" placeholder="https://script.google.com/macros/s/...">
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="sbtn sbtn-blue" onclick="testAndSaveURL()">🔌 Conectar y probar</button>
+          <button class="sbtn sbtn-red" onclick="clearURL()" id="btn-clear-url" style="display:none">🗑 Desconectar</button>
+        </div>
+        <div id="test-result" style="margin-top:10px"></div>
+      </div>
+
+      <!-- Datos locales -->
+      <div class="scard">
+        <h3>📦 Datos locales</h3>
+        <p>Las visitas se guardan en este teléfono como respaldo aunque no haya internet.</p>
+        <div id="local-stats" style="font-size:13px;color:var(--txl);margin-bottom:10px"></div>
+        <button class="sbtn sbtn-blue" onclick="retrySyncAll()">🔄 Reintentar pendientes</button>
+      </div>
+    </div>
+
+  </div><!-- cnt -->
+
+  <nav class="bnav">
+    <button class="nb active" onclick="goTo('nueva')" id="nav-nueva"><span class="ni">➕</span><span class="nl">Nueva</span></button>
+    <button class="nb" onclick="goTo('lista')" id="nav-lista"><span class="ni">📋</span><span class="nl">Hoy</span></button>
+    <button class="nb" onclick="goTo('historial')" id="nav-historial"><span class="ni">🗂️</span><span class="nl">Historial</span></button>
+    <button class="nb" onclick="goTo('config')" id="nav-config"><span class="ni">⚙️</span><span class="nl">Config</span></button>
+  </nav>
+</div>
+
+<!-- MODAL REPORTE -->
+<div class="moverlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3>📤 Reporte del día</h3>
+    <p>Copiá y mandalo por WhatsApp al admin.</p>
+    <div class="rtxt" id="report-content"></div>
+    <button class="btn btn-green" onclick="copyReport()">📋 Copiar reporte</button>
+    <div style="height:8px"></div>
+    <button class="btn btn-orange" onclick="sendWA()">💬 Abrir WhatsApp</button>
+    <div style="height:8px"></div>
+    <button class="btn btn-grey" onclick="closeModal()">Cerrar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// CONFIG & STORAGE
+// ════════════════════════════════════════════════════════════════
+const SK = 'emmapel_v2';
+const CK = 'emmapel_cfg';
+
+function loadCfg(){
+  try{ return JSON.parse(localStorage.getItem(CK)||'{}') }catch{ return {} }
+}
+function saveCfg(c){ localStorage.setItem(CK, JSON.stringify(c)) }
+
+function loadData(){
+  try{ return JSON.parse(localStorage.getItem(SK)||'[]') }catch{ return [] }
+}
+function saveData(d){ localStorage.setItem(SK, JSON.stringify(d)) }
+
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  const cfg = loadCfg();
+  // Set today's date
+  document.getElementById('f-fecha').value = todayStr();
+  // Restore last vendedor
+  if(cfg.lastVendedor) document.getElementById('f-vendedor').value = cfg.lastVendedor;
+  // Apply vendor names
+  applyVendorNames();
+  // Update sync indicator
+  updateSyncIndicator();
+  // Show setup banner if not configured
+  renderSetupBanner();
+  // Update config page
+  updateConfigPage();
+  // Update nav dot
+  updateNavDot();
+  // Auto retry pending on start
+  setTimeout(retrySyncAll, 1500);
+});
+
+function applyVendorNames(){
+  const cfg = loadCfg();
+  const v1 = cfg.v1 || 'Vendedor 1';
+  const v2 = cfg.v2 || 'Vendedor 2';
+  document.getElementById('opt-v1').textContent = v1;
+  document.getElementById('opt-v2').textContent = v2;
+  // Restore fields in config
+  document.getElementById('cfg-v1').value = v1;
+  document.getElementById('cfg-v2').value = v2;
+}
+
+function saveVendedores(){
+  const cfg = loadCfg();
+  cfg.v1 = document.getElementById('cfg-v1').value.trim() || 'Vendedor 1';
+  cfg.v2 = document.getElementById('cfg-v2').value.trim() || 'Vendedor 2';
+  saveCfg(cfg);
+  applyVendorNames();
+  toast('✅ Nombres actualizados');
+}
+
+// ════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════════════
+function goTo(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  document.querySelector('.cnt').scrollTop = 0;
+  if(name==='lista') renderLista();
+  if(name==='historial') renderHistorial();
+  if(name==='config') updateConfigPage();
+}
+
+// ════════════════════════════════════════════════════════════════
+// FORM
+// ════════════════════════════════════════════════════════════════
+let selectedResult = '';
+
+function selChip(type, el){
+  document.querySelectorAll('.chip').forEach(c=>{
+    c.classList.remove('sel-vend','sel-no','sel-repr','sel-nofui');
+  });
+  el.classList.add('sel-'+type);
+  selectedResult = el.dataset.val;
+  document.getElementById('field-motivo').style.display = (type==='no')?'block':'none';
+}
+
+async function guardarVisita(){
+  const fecha    = document.getElementById('f-fecha').value;
+  const turno    = document.getElementById('f-turno').value;
+  const vendedor = document.getElementById('f-vendedor').value;
+  const cliente  = document.getElementById('f-cliente').value.trim();
+  const rubro    = document.getElementById('f-rubro').value;
+  const resultado= selectedResult;
+  const monto    = document.getElementById('f-monto').value;
+  const motivo   = document.getElementById('f-motivo').value;
+  const notas    = document.getElementById('f-notas').value.trim();
+
+  if(!vendedor){ toast('⚠️ Elegí el vendedor'); return; }
+  if(!cliente){  toast('⚠️ Escribí el nombre del cliente'); return; }
+  if(!resultado){ toast('⚠️ Elegí el resultado'); return; }
+
+  const visita = {
+    id: Date.now(),
+    fecha, turno, vendedor, cliente, rubro,
+    resultado, monto, motivo, notas,
+    synced: false, syncError: false
+  };
+
+  // Save locally first (always)
+  const data = loadData();
+  data.unshift(visita);
+  saveData(data);
+
+  // Save last vendedor
+  const cfg = loadCfg();
+  cfg.lastVendedor = vendedor;
+  saveCfg(cfg);
+
+  // Reset form
+  resetForm();
+  toast('✅ Visita guardada');
+  updateSyncIndicator();
+  updateNavDot();
+
+  // Try to sync
+  await syncVisita(visita);
+}
+
+function resetForm(){
+  document.getElementById('f-fecha').value = todayStr();
+  document.getElementById('f-cliente').value = '';
+  document.getElementById('f-rubro').value = '';
+  document.getElementById('f-monto').value = '';
+  document.getElementById('f-motivo').value = '';
+  document.getElementById('f-notas').value = '';
+  document.getElementById('f-turno').value = '';
+  selectedResult = '';
+  document.querySelectorAll('.chip').forEach(c=>{
+    c.classList.remove('sel-vend','sel-no','sel-repr','sel-nofui');
+  });
+  document.getElementById('field-motivo').style.display = 'none';
+  const cfg = loadCfg();
+  if(cfg.lastVendedor) document.getElementById('f-vendedor').value = cfg.lastVendedor;
+}
+
+// ════════════════════════════════════════════════════════════════
+// GOOGLE SHEETS SYNC
+// ════════════════════════════════════════════════════════════════
+async function syncVisita(visita){
+  const cfg = loadCfg();
+  if(!cfg.sheetsUrl) return; // Not configured
+
+  try{
+    const res = await fetch(cfg.sheetsUrl, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'}, // Apps Script needs text/plain for CORS
+      body: JSON.stringify(visita)
+    });
+    const json = await res.json();
+    if(json.ok){
+      markSynced(visita.id, true);
+      updateSyncIndicator();
+      updateNavDot();
+      toast('☁️ Sincronizado con Sheets');
+      return true;
+    } else {
+      markSynced(visita.id, false, true);
+      updateSyncIndicator();
+      return false;
+    }
+  } catch(err){
+    markSynced(visita.id, false, true);
+    updateSyncIndicator();
+    return false;
+  }
+}
+
+function markSynced(id, ok, err=false){
+  const data = loadData();
+  const idx = data.findIndex(v=>v.id===id);
+  if(idx>=0){
+    data[idx].synced = ok;
+    data[idx].syncError = err && !ok;
+    saveData(data);
+  }
+}
+
+async function retrySyncAll(){
+  const cfg = loadCfg();
+  if(!cfg.sheetsUrl) return;
+  const data = loadData();
+  const pending = data.filter(v=>!v.synced);
+  if(pending.length===0){
+    updateSyncIndicator(); return;
+  }
+  updateSyncPill('syncing');
+  let synced = 0;
+  for(const v of pending){
+    const ok = await syncVisita(v);
+    if(ok) synced++;
+  }
+  updateSyncIndicator();
+  if(synced>0) toast(`☁️ ${synced} visita${synced>1?'s':''} sincronizada${synced>1?'s':''}`);
+}
+
+function updateSyncIndicator(){
+  const cfg  = loadCfg();
+  const data = loadData();
+  const pill = document.getElementById('sync-pill');
+  const icon = document.getElementById('sync-icon');
+  const txt  = document.getElementById('sync-txt');
+
+  if(!cfg.sheetsUrl){
+    pill.className='sync-pill sync-off';
+    icon.textContent='⚠️'; txt.textContent='Sin config';
+    return;
+  }
+  const pending = data.filter(v=>!v.synced).length;
+  if(pending===0){
+    pill.className='sync-pill sync-ok';
+    icon.textContent='☁️'; txt.textContent='Al día';
+  } else {
+    pill.className='sync-pill sync-pend';
+    icon.textContent='🔄'; txt.textContent=`${pending} pend.`;
+  }
+}
+
+function updateSyncPill(state){
+  const pill = document.getElementById('sync-pill');
+  const icon = document.getElementById('sync-icon');
+  const txt  = document.getElementById('sync-txt');
+  if(state==='syncing'){
+    pill.className='sync-pill sync-pend';
+    icon.textContent='🔄'; txt.textContent='Sync...';
+  }
+}
+
+function updateNavDot(){
+  const data = loadData();
+  const cfg  = loadCfg();
+  const nb = document.getElementById('nav-config');
+  const existing = nb.querySelector('.nb-dot');
+  if(existing) existing.remove();
+  if(!cfg.sheetsUrl){
+    const dot=document.createElement('div'); dot.className='nb-dot';
+    nb.appendChild(dot);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// RENDER
+// ════════════════════════════════════════════════════════════════
+function renderLista(){
+  const data = loadData();
+  const hoy  = todayStr();
+  const hoyData = data.filter(v=>v.fecha===hoy);
+  renderStats(hoyData, 'stats-wrap', 'hoy');
+  renderPendingBanner(hoyData);
+  const el = document.getElementById('lista-visitas');
+  if(hoyData.length===0){
+    el.innerHTML=`<div class="empty"><div class="ei">📋</div><p>Todavía no cargaste visitas de hoy.<br>Andá a "+" para empezar.</p></div>`;
+    return;
+  }
+  el.innerHTML = hoyData.map(v=>cardHTML(v)).join('');
+}
+
+function renderHistorial(){
+  const data = loadData();
+  const el   = document.getElementById('historial-visitas');
+  if(data.length===0){
+    el.innerHTML=`<div class="empty"><div class="ei">🗂️</div><p>Todavía no hay visitas guardadas.</p></div>`;
+    return;
+  }
+  const byDate={};
+  data.forEach(v=>{ if(!byDate[v.fecha])byDate[v.fecha]=[]; byDate[v.fecha].push(v); });
+  let html='';
+  Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).forEach(d=>{
+    html+=`<div style="padding:10px 14px 4px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--txl);text-transform:uppercase;letter-spacing:.5px">${fmtDate(d)}</div>`;
+    html+=byDate[d].map(v=>cardHTML(v,true)).join('');
+  });
+  el.innerHTML=html;
+}
+
+function cardHTML(v, showDate=false){
+  const tc = v.resultado.includes('Vend')?'vb-vend':v.resultado.includes('No compró')?'vb-no':v.resultado.includes('No fui')?'vb-nofui':'vb-repr';
+  let meta=`<span>👤 ${v.vendedor||'—'}</span>`;
+  if(v.rubro) meta+=`<span>${v.rubro}</span>`;
+  if(v.turno) meta+=`<span>${v.turno}</span>`;
+  if(v.monto) meta+=`<span>💰 ${fmtMonto(v.monto)}</span>`;
+  if(showDate && v.fecha) meta+=`<span>📅 ${fmtDate(v.fecha)}</span>`;
+  let extra='';
+  if(v.motivo) extra+=`<div class="vnote">❓ <b>${v.motivo}</b></div>`;
+  if(v.notas)  extra+=`<div class="vnote">💬 ${v.notas}</div>`;
+  // Sync badge
+  const syncBadge = v.synced
+    ? `<span class="vsync vsync-ok">☁️ Sync</span>`
+    : v.syncError
+      ? `<span class="vsync vsync-err">⚠️ Error</span>`
+      : `<span class="vsync vsync-pend">🕐 Pendiente</span>`;
+  return `<div class="vcard">
+    <div class="vcard-top">
+      <div class="vname">${v.cliente||'Sin nombre'}</div>
+      <div class="vbadge ${tc}">${v.resultado}</div>
+    </div>
+    <div class="vmeta">${meta}</div>
+    ${extra}
+    <div class="vactions">
+      <button class="vbtn-del" onclick="borrar(${v.id})">🗑</button>
+      ${syncBadge}
+    </div>
+  </div>`;
+}
+
+function renderStats(data, targetId, label){
+  const el=document.getElementById(targetId); if(!el) return;
+  const total=data.length;
+  const vend=data.filter(v=>v.resultado.includes('Vend')).length;
+  const no=data.filter(v=>v.resultado.includes('No compró')).length;
+  const pct=total>0?Math.round(vend/total*100):0;
+  const pend=data.filter(v=>!v.synced).length;
+  el.innerHTML=`<div class="sgrid">
+    <div class="sbox sa"><div class="snum">${total}</div><div class="slbl">visitas ${label==='hoy'?'hoy':'total'}</div></div>
+    <div class="sbox sv"><div class="snum">${vend}</div><div class="slbl">ventas</div></div>
+    <div class="sbox sp"><div class="snum">${no}</div><div class="slbl">no compraron</div></div>
+    <div class="sbox sn"><div class="snum">${pct}%</div><div class="slbl">conversión</div></div>
+  </div>`;
+}
+
+function renderPendingBanner(data){
+  const el=document.getElementById('pending-banner'); if(!el) return;
+  const cfg=loadCfg();
+  const pend=data.filter(v=>!v.synced).length;
+  if(pend>0 && cfg.sheetsUrl){
+    el.innerHTML=`<div style="margin:0 12px 8px;background:var(--nal);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;cursor:pointer" onclick="retrySyncAll()">
+      <span style="font-size:20px">🔄</span>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600;color:#8B4400">${pend} visita${pend>1?'s':''} sin sincronizar</div><div style="font-size:11px;color:#8B4400">Tocá para reintentar</div></div>
+    </div>`;
+  } else { el.innerHTML=''; }
+}
+
+function renderSetupBanner(){
+  const cfg = loadCfg();
+  const el  = document.getElementById('setup-banner');
+  if(!cfg.sheetsUrl){
+    el.innerHTML=`<div class="wizard">
+      <h2>⚙️ Configurá la sincronización</h2>
+      <p>Para que las visitas lleguen automáticamente a Google Sheets, necesitás conectar la app una sola vez.</p>
+      <button class="wizard-btn" onclick="goTo('config')">Ir a Configuración →</button>
+    </div>`;
+  } else { el.innerHTML=''; }
+}
+
+function borrar(id){
+  if(!confirm('¿Borrar esta visita?')) return;
+  const data=loadData().filter(v=>v.id!==id);
+  saveData(data);
+  renderLista(); renderHistorial();
+  updateSyncIndicator();
+  toast('Visita eliminada');
+}
+
+// ════════════════════════════════════════════════════════════════
+// CONFIG PAGE
+// ════════════════════════════════════════════════════════════════
+function updateConfigPage(){
+  const cfg  = loadCfg();
+  const data = loadData();
+  const el   = document.getElementById('config-status-box');
+  const pending = data.filter(v=>!v.synced).length;
+
+  if(cfg.sheetsUrl){
+    el.innerHTML=`<div class="ok-box">✅ Conectado a Google Sheets — ${pending} visita${pending!==1?'s':''} pendiente${pending!==1?'s':''} de sincronizar.</div>`;
+    document.getElementById('cfg-url').value = cfg.sheetsUrl;
+    document.getElementById('cfg-url').classList.add('ok');
+    document.getElementById('btn-clear-url').style.display='inline-block';
+  } else {
+    el.innerHTML=`<div class="info-box">⚠️ Sin configurar. Las visitas se guardan solo en este teléfono.</div>`;
+    document.getElementById('btn-clear-url').style.display='none';
+  }
+
+  // Local stats
+  const ls = document.getElementById('local-stats');
+  if(ls){
+    ls.textContent = `${data.length} visitas guardadas en este teléfono — ${pending} sin sincronizar.`;
+  }
+
+  // Update config fields
+  applyVendorNames();
+}
+
+async function testAndSaveURL(){
+  const url = document.getElementById('cfg-url').value.trim();
+  if(!url){ toast('⚠️ Pegá la URL primero'); return; }
+  if(!url.startsWith('https://script.google.com')){
+    toast('⚠️ La URL debe empezar con https://script.google.com'); return; }
+
+  const resultEl = document.getElementById('test-result');
+  resultEl.innerHTML=`<div class="info-box"><span class="spin">🔄</span> Probando conexión...</div>`;
+
+  try{
+    const res = await fetch(url, {method:'GET'});
+    const json = await res.json();
+    if(json.ok){
+      const cfg = loadCfg();
+      cfg.sheetsUrl = url;
+      saveCfg(cfg);
+      document.getElementById('cfg-url').classList.remove('err');
+      document.getElementById('cfg-url').classList.add('ok');
+      document.getElementById('btn-clear-url').style.display='inline-block';
+      resultEl.innerHTML=`<div class="ok-box">✅ Conexión exitosa. ¡La app ya sincroniza automáticamente!</div>`;
+      updateSyncIndicator();
+      updateNavDot();
+      renderSetupBanner();
+      // Sync all pending
+      toast('🔄 Sincronizando visitas pendientes...');
+      await retrySyncAll();
+      updateConfigPage();
+    } else {
+      throw new Error('Respuesta inesperada');
+    }
+  } catch(err){
+    document.getElementById('cfg-url').classList.add('err');
+    resultEl.innerHTML=`<div style="background:var(--rol);border-left:3px solid var(--ro);border-radius:0 8px 8px 0;padding:10px 12px;font-size:13px;color:#990000;margin-top:8px">❌ No se pudo conectar. Verificá que el Apps Script esté implementado como "Aplicación web" y que el acceso sea "Cualquier usuario".</div>`;
+  }
+}
+
+function clearURL(){
+  if(!confirm('¿Desconectar de Google Sheets?')) return;
+  const cfg = loadCfg();
+  delete cfg.sheetsUrl;
+  saveCfg(cfg);
+  document.getElementById('cfg-url').value='';
+  document.getElementById('cfg-url').classList.remove('ok','err');
+  document.getElementById('btn-clear-url').style.display='none';
+  document.getElementById('test-result').innerHTML='';
+  updateSyncIndicator();
+  updateNavDot();
+  updateConfigPage();
+  renderSetupBanner();
+  toast('Desconectado');
+}
+
+function copyScript(){
+  const code = document.getElementById('apps-script-code').textContent;
+  if(navigator.clipboard){ navigator.clipboard.writeText(code); }
+  else{
+    const ta=document.createElement('textarea'); ta.value=code;
+    ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.focus();ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+  }
+  toast('✅ Código copiado');
+}
+
+// ════════════════════════════════════════════════════════════════
+// REPORTE WPP
+// ════════════════════════════════════════════════════════════════
+function openReport(){
+  const data  = loadData();
+  const hoy   = todayStr();
+  const hd    = data.filter(v=>v.fecha===hoy);
+  if(hd.length===0){ toast('No hay visitas de hoy'); return; }
+
+  const vendedores = [...new Set(hd.map(v=>v.vendedor))].join(' + ');
+  const ventas = hd.filter(v=>v.resultado.includes('Vend'));
+  const noc    = hd.filter(v=>v.resultado.includes('No compró'));
+  const repr   = hd.filter(v=>v.resultado.includes('Reprogramar'));
+  const nofui  = hd.filter(v=>v.resultado.includes('No fui'));
+  const monto  = ventas.reduce((s,v)=>s+(Number(v.monto)||0),0);
+
+  let t=`📋 REPORTE EMMAPEL — ${fmtDate(hoy)}\n`;
+  t+=`👤 ${vendedores}\n─────────────────────\n`;
+  t+=`Visitas: ${hd.length}  |  ✅ ${ventas.length}  |  ❌ ${noc.length}  |  📞 ${repr.length}\n`;
+  if(monto>0) t+=`💰 Total aprox: $${monto.toLocaleString('es-AR')}\n`;
+  t+=`\n`;
+  if(ventas.length){ t+=`✅ VENDÍ:\n`; ventas.forEach(v=>{ t+=`• ${v.cliente}${v.rubro?' ('+v.rubro+')':''}${v.monto?' — $'+fmtMonto(v.monto):''}\n`; if(v.notas) t+=`  💬 ${v.notas}\n`; }); t+=`\n`; }
+  if(noc.length)   { t+=`❌ NO COMPRARON:\n`; noc.forEach(v=>{ t+=`• ${v.cliente}${v.motivo?' — '+v.motivo:''}\n`; if(v.notas) t+=`  💬 ${v.notas}\n`; }); t+=`\n`; }
+  if(repr.length)  { t+=`📞 REPROGRAMAR:\n`; repr.forEach(v=>{ t+=`• ${v.cliente}${v.rubro?' ('+v.rubro+')':''}\n`; if(v.notas) t+=`  💬 ${v.notas}\n`; }); t+=`\n`; }
+  if(nofui.length) { t+=`🚫 NO FUI:\n`; nofui.forEach(v=>{ t+=`• ${v.cliente}${v.rubro?' ('+v.rubro+')':''}\n`; }); }
+  t+=`─────────────────────\nEmmapel app`;
+
+  document.getElementById('report-content').textContent = t;
+  window._rpt = t;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('show') }
+function copyReport(){
+  const t=window._rpt||'';
+  if(navigator.clipboard){ navigator.clipboard.writeText(t); }
+  else{ const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.focus();a.select();document.execCommand('copy');document.body.removeChild(a); }
+  toast('✅ Reporte copiado');
+}
+function sendWA(){ window.open('https://wa.me/?text='+encodeURIComponent(window._rpt||''),'_blank') }
+
+// ════════════════════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════════════════════
+function todayStr(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmtDate(s){
+  if(!s) return ''; const p=s.split('-'); return `${p[2]}/${p[1]}/${p[0]}`;
+}
+function fmtMonto(v){
+  if(!v) return ''; return '$'+Number(v).toLocaleString('es-AR');
+}
+function toast(msg,ms=2500){
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),ms);
+}
+<!-- ── PWA: Service Worker (cache offline + installable) ── -->
+<script>
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  const SW_CODE = `
+const CACHE = 'emmapel-visitas-v1';
+const ASSETS = [self.location.href.split('?')[0]];
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+  );
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+    )).then(() => self.clients.claim())
+  );
+});
+self.addEventListener('fetch', e => {
+  if(e.request.method !== 'GET') return;
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      const fetchPromise = fetch(e.request).then(response => {
+        if(response && response.status === 200 && response.type === 'basic'){
+          const clone = response.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+        }
+        return response;
+      }).catch(() => cached);
+      return cached || fetchPromise;
+    })
+  );
+});
+`;
+  const blob = new Blob([SW_CODE], {type:'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl, {scope: './'})
+    .then(reg => {
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing;
+        nw.addEventListener('statechange', () => {
+          if(nw.state === 'installed' && navigator.serviceWorker.controller){
+            if(typeof toast === 'function') toast('🔄 Hay una versión nueva disponible — recargá la app');
+          }
+        });
+      });
+    })
+    .catch(()=>{});
+})();
+
+// iOS "Add to Home Screen" nudge
+(function(){
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInApp = window.navigator.standalone;
+  const dismissed = localStorage.getItem('iosNudge');
+  if(isIos && !isInApp && !dismissed){
+    setTimeout(()=>{
+      const bar = document.createElement('div');
+      bar.style.cssText = 'position:fixed;bottom:80px;left:12px;right:12px;background:#0D1B4B;color:#fff;border-radius:14px;padding:12px 14px;font-size:13px;font-family:DM Sans,sans-serif;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;gap:10px;align-items:center;';
+      bar.innerHTML = '<span style="font-size:20px">📲</span><span style="flex:1;line-height:1.4">Para instalar como app tocá <b>Compartir</b> → <b>Agregar a inicio</b></span><span onclick="this.parentNode.remove();localStorage.setItem(\'iosNudge\',1)" style="font-size:20px;cursor:pointer;color:rgba(255,255,255,.5)">✕</span>';
+      document.body.appendChild(bar);
+    }, 3000);
+  }
+})();
+
+// Android "Add to Home Screen" prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(()=>{
+    if(!deferredPrompt) return;
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;bottom:80px;left:12px;right:12px;background:#0D1B4B;color:#fff;border-radius:14px;padding:12px 14px;font-family:DM Sans,sans-serif;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3);';
+    bar.innerHTML = '<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px"><span style="font-size:20px">📲</span><span style="font-size:13px;line-height:1.4">Instalá la app en tu teléfono para acceso rápido</span></div><div style="display:flex;gap:8px"><button onclick="deferredPrompt.prompt();deferredPrompt=null;this.closest(\'div[style]\').remove()" style="flex:1;background:#AAFF00;color:#0D1B4B;border:none;border-radius:8px;padding:9px;font-weight:700;font-size:13px;cursor:pointer;">Instalar</button><button onclick="localStorage.setItem(\'androidNudge\',1);this.closest(\'div[style]\').remove()" style="background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;cursor:pointer;">Ahora no</button></div>';
+    if(!localStorage.getItem('androidNudge')) document.body.appendChild(bar);
+  }, 3000);
+});
+</script>
+</body>
+</html>
