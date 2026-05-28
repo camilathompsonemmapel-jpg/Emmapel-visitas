@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Emmapel — Visitas</title>
 
 <!-- ── PWA: iOS ── -->
@@ -46,11 +46,11 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--gr);colo
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 /* content */
-.cnt{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:74px}
+.cnt{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(74px + env(safe-area-inset-bottom, 16px))}
 .page{display:none}.page.active{display:block}
 
 /* bottom nav */
-.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--az);display:flex;border-top:1px solid rgba(255,255,255,.1);z-index:100}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--az);display:flex;border-top:1px solid rgba(255,255,255,.1);z-index:100;padding-bottom:env(safe-area-inset-bottom, 0px)}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 10px;cursor:pointer;border:none;background:none;position:relative}
 .nb.active{background:rgba(170,255,0,.1)}
 .nb .ni{font-size:20px}.nb .nl{font-size:10px;color:rgba(255,255,255,.5);margin-top:3px;font-weight:500}
@@ -151,7 +151,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--gr);colo
 /* modal */
 .moverlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:flex-end;max-width:480px;left:50%;transform:translateX(-50%)}
 .moverlay.show{display:flex}
-.modal{background:var(--bl);border-radius:20px 20px 0 0;padding:20px 16px 30px;width:100%;max-height:80vh;overflow-y:auto}
+.modal{background:var(--bl);border-radius:20px 20px 0 0;padding:20px 16px calc(30px + env(safe-area-inset-bottom, 0px));width:100%;max-height:80vh;overflow-y:auto}
 .modal h3{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:var(--az);margin-bottom:4px}
 .modal p{font-size:13px;color:var(--txl);margin-bottom:14px}
 .rtxt{background:var(--gr);border-radius:10px;padding:12px;font-size:12px;line-height:1.7;color:var(--tx);white-space:pre-wrap;max-height:280px;overflow-y:auto;border:1px solid var(--grb);margin-bottom:14px;font-family:monospace}
