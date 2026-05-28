@@ -428,20 +428,59 @@ function doGet(e){
 const SK = 'emmapel_v2';
 const CK = 'emmapel_cfg';
 
-function loadCfg(){
-  try{ return JSON.parse(localStorage.getItem(CK)||'{}') }catch{ return {} }
+// ── Dual-write: IndexedDB primario (no se borra en iOS) + localStorage backup ──
+const IDB_NAME = 'emmapel_db', IDB_STORE = 'kv';
+let _idb = null;
+function openIDB(){
+  return new Promise((res,rej)=>{
+    if(_idb){res(_idb);return;}
+    const r=indexedDB.open(IDB_NAME,1);
+    r.onupgradeneeded=e=>e.target.result.createObjectStore(IDB_STORE);
+    r.onsuccess=e=>{_idb=e.target.result;res(_idb);};
+    r.onerror=()=>rej(r.error);
+  });
 }
-function saveCfg(c){ localStorage.setItem(CK, JSON.stringify(c)) }
+async function idbSet(key,val){
+  try{const db=await openIDB();await new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readwrite');tx.objectStore(IDB_STORE).put(val,key);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});}catch(e){}
+}
+async function idbGet(key){
+  try{const db=await openIDB();return new Promise((res,rej)=>{const tx=db.transaction(IDB_STORE,'readonly');const r=tx.objectStore(IDB_STORE).get(key);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}catch(e){return null;}
+}
+async function initStorage(){
+  // IDB → localStorage on every load (IDB persists, localStorage may be cleared by iOS)
+  try{
+    const cfgIDB=await idbGet(CK), dataIDB=await idbGet(SK);
+    if(cfgIDB) localStorage.setItem(CK,cfgIDB);
+    if(dataIDB) localStorage.setItem(SK,dataIDB);
+  }catch(e){}
+  // Also migrate any existing localStorage → IDB
+  const cfgLS=localStorage.getItem(CK), dataLS=localStorage.getItem(SK);
+  if(cfgLS) idbSet(CK,cfgLS);
+  if(dataLS) idbSet(SK,dataLS);
+}
 
-function loadData(){
-  try{ return JSON.parse(localStorage.getItem(SK)||'[]') }catch{ return [] }
+function loadCfg(){
+  try{return JSON.parse(localStorage.getItem(CK)||'{}')}catch{return{}}
 }
-function saveData(d){ localStorage.setItem(SK, JSON.stringify(d)) }
+function saveCfg(c){
+  const s=JSON.stringify(c);
+  localStorage.setItem(CK,s);
+  idbSet(CK,s);
+}
+function loadData(){
+  try{return JSON.parse(localStorage.getItem(SK)||'[]')}catch{return[]}
+}
+function saveData(d){
+  const s=JSON.stringify(d);
+  localStorage.setItem(SK,s);
+  idbSet(SK,s);
+}
 
 // ════════════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded', async ()=>{
+  await initStorage();
   const cfg = loadCfg();
   // Set today's date
   document.getElementById('f-fecha').value = todayStr();
