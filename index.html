@@ -1,662 +1,1473 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tracker Financiero — Cami & Juan</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #F1F5F9; color: #0F172A; }
-    
-    .header {
-      background: white;
-      border-bottom: 1px solid #E2E8F0;
-      padding: 20px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .header-content { max-width: 1000px; margin: 0 auto; }
-    .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; margin-bottom: 16px; }
-    .title-block h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; }
-    .title-block p { color: #64748B; font-size: 12px; }
-    .tc-input { display: flex; align-items: center; gap: 8px; background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 10px; }
-    .tc-input span { color: #B45309; font-weight: 700; font-size: 14px; }
-    .tc-input input { background: transparent; border: none; outline: none; color: #B45309; font-weight: 700; font-size: 16px; width: 100px; text-align: right; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Emmapel — Manual de Ventas</title>
 
-    .conversor-section { border-top: 1px solid #E2E8F0; padding-top: 16px; margin-top: 16px; }
-    .conversor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .conversor-header span { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748B; }
-    .conversor-header button { background: transparent; border: 1px solid #E2E8F0; color: #64748B; cursor: pointer; font-size: 11px; font-weight: 600; padding: 3px 12px; border-radius: 99px; }
-    .conversor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
-    .currency-card { background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px; }
-    .currency-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .currency-name { display: flex; gap: 6px; align-items: center; font-weight: 700; font-size: 13px; }
-    .currency-tc-input { display: flex; align-items: center; gap: 2px; background: rgba(0,0,0,0.05); border-radius: 6px; padding: 2px 6px; }
-    .currency-tc-input span { font-size: 9px; font-weight: 700; color: #94A3B8; }
-    .currency-tc-input input { width: 40px; background: transparent; border: none; outline: none; font-size: 9px; font-weight: 700; color: #64748B; text-align: right; }
-    .currency-input { width: 100%; padding: 9px 12px; border: 1px solid #E2E8F0; border-radius: 9px; background: white; font-size: 14px; margin-bottom: 8px; outline: none; }
-    .currency-result { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 9px; padding: 9px 12px; min-height: 50px; display: flex; flex-direction: column; justify-content: center; }
-    .currency-result-amount { font-size: 18px; font-weight: 800; }
-    .currency-result-desc { font-size: 10px; color: #94A3B8; margin-top: 2px; }
-    .currency-empty { height: 50px; border: 1.5px dashed #E2E8F0; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #94A3B8; font-size: 11px; }
+<!-- ── PWA: iOS ── -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Emmapel Ventas">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230D1B4B'/%3E%3Crect x='60' y='80' width='392' height='60' rx='12' fill='%23AAFF00'/%3E%3Crect x='60' y='180' width='260' height='44' rx='10' fill='%231A3A7A'/%3E%3Crect x='60' y='264' width='320' height='44' rx='10' fill='%231A3A7A'/%3E%3Crect x='60' y='348' width='200' height='44' rx='10' fill='%231A3A7A'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#0D1B4B">
+<!-- ── PWA: manifest inline ── -->
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Emmapel%20Manual%20de%20Ventas%22%2C%22short_name%22%3A%22Ventas%22%2C%22description%22%3A%22Manual%20de%20ventas%20para%20vendedores%20Emmapel%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230D1B4B%22%2C%22theme_color%22%3A%22%230D1B4B%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%2520viewBox%3D%270%25200%2520512%2520512%27%253E%253Crect%2520width%3D%27512%27%2520height%3D%27512%27%2520rx%3D%27100%27%2520fill%3D%27%25230D1B4B%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul: #0D1B4B;
+  --azul-medio: #1A3A7A;
+  --azul-claro: #2255AA;
+  --verde: #AAFF00;
+  --verde-oscuro: #88CC00;
+  --blanco: #FFFFFF;
+  --gris: #F4F6FB;
+  --gris-borde: #E0E6F0;
+  --texto: #1A1A2E;
+  --texto-claro: #5A6480;
+  --rojo: #FF4444;
+  --naranja: #FF8C00;
+  --amarillo: #FFD600;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--gris); color: var(--texto); overflow: hidden; }
 
-    .tabs {
-      display: flex;
-      gap: 2px;
-      margin-top: 16px;
-      border-bottom: 1px solid #E2E8F0;
-    }
-    .tab-button {
-      padding: 9px 18px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: #64748B;
-      border-bottom: 2px solid transparent;
-    }
-    .tab-button.active {
-      color: #0F172A;
-      border-bottom-color: #0EA5E9;
-    }
+.app { display: flex; flex-direction: column; height: 100vh; max-width: 480px; margin: 0 auto; background: var(--blanco); position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.15); }
 
-    .content { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+/* HEADER */
+.header { background: var(--azul); padding: 14px 16px 10px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.header-logo { width: 40px; height: 40px; background: var(--verde); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 18px; color: var(--azul); letter-spacing: -1px; flex-shrink: 0; }
+.header-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 20px; color: var(--blanco); line-height: 1.1; }
+.header-sub { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 400; }
+.header-badge { margin-left: auto; background: var(--verde); color: var(--azul); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
 
-    .funds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-    .fund-card { background: white; border: 1px solid #E2E8F0; border-radius: 16px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-    .fund-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-    .fund-title { display: flex; gap: 10px; align-items: center; }
-    .fund-emoji { font-size: 24px; line-height: 1; }
-    .fund-name { font-weight: 700; font-size: 15px; }
-    .fund-amount { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
-    .fund-usd { font-size: 12px; color: #64748B; }
-    .deposit-btn { width: 100%; padding: 12px; background: white; border: 1px solid #E2E8F0; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 14px; margin-top: 14px; }
-    .deposit-btn:hover { background: #F8FAFC; }
+/* CONTENT */
+.content { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding-bottom: calc(76px + env(safe-area-inset-bottom, 16px)); }
+.page { display: none; }
+.page.active { display: block; }
 
-    .calculator-card { background: white; border: 1px solid #E2E8F0; border-radius: 14px; padding: 20px; margin-bottom: 16px; }
-    .calculator-title { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
-    .calculator-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .input-group { display: flex; flex-direction: column; }
-    .input-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748B; margin-bottom: 6px; }
-    .input-field { padding: 11px 14px; border: 1px solid #E2E8F0; border-radius: 9px; font-size: 15px; outline: none; }
-    .result-box { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 14px; margin-top: 12px; }
-    .result-amount { font-size: 24px; font-weight: 800; color: #16A34A; }
-    .result-desc { font-size: 12px; color: #15803D; margin-top: 4px; }
+/* SECTION TITLE */
+.section-title { padding: 18px 16px 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 22px; color: var(--azul); letter-spacing: 0.3px; }
+.section-sub { padding: 0 16px 12px; font-size: 12px; color: var(--texto-claro); }
 
-    .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); display: flex; align-items: center; justify-content: center; z-index: 100; }
-    .modal-content { background: white; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.14); }
-    .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 20px; }
-    .modal-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #64748B; margin: 14px 0 6px; }
-    .modal-input { width: 100%; padding: 11px 14px; border: 1px solid #E2E8F0; border-radius: 9px; font-size: 15px; outline: none; margin-bottom: 6px; }
-    .modal-button { width: 100%; padding: 13px; background: #10B981; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 14px; }
+/* HOME — Welcome */
+.welcome { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-medio) 100%); padding: 22px 16px 18px; margin: 0; }
+.welcome-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; color: var(--verde); line-height: 1.05; letter-spacing: -0.5px; }
+.welcome-sub { font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 6px; line-height: 1.4; }
 
-    .hidden { display: none !important; }
-    .progress-bar { height: 8px; border-radius: 99px; background: rgba(0,0,0,0.07); overflow: hidden; margin: 12px 0; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #10B981, #4ADE80); border-radius: 99px; }
-    table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
-    table th { text-align: left; padding: 8px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #64748B; }
-    table td { padding: 8px; border-bottom: 1px solid #E2E8F0; }
-    table tr:nth-child(even) { background: #F8FAFC; }
-  </style>
+/* HOME — Section header for blocks */
+.block-title { padding: 16px 16px 4px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 20px; color: var(--azul); letter-spacing: 0.3px; }
+.block-sub { padding: 0 16px 10px; font-size: 12px; color: var(--texto-claro); }
+
+/* SHORTCUTS */
+.shortcut-list { padding: 4px 12px 8px; }
+.shortcut { border-radius: 14px; padding: 14px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 8px; transition: transform 0.15s; }
+.shortcut:active { transform: scale(0.98); }
+.shortcut-icon { font-size: 24px; flex-shrink: 0; }
+.shortcut-body { flex: 1; min-width: 0; }
+.shortcut-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; color: var(--blanco); line-height: 1.2; }
+.shortcut-sub { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 2px; line-height: 1.3; }
+.shortcut-arrow { font-size: 22px; color: rgba(255,255,255,0.5); font-weight: 300; flex-shrink: 0; }
+
+/* ARGUMENTOS RÁPIDOS */
+.args-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 12px 8px; }
+.arg-item { background: var(--gris); border: 1px solid var(--gris-borde); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 8px; }
+.arg-icon { font-size: 18px; flex-shrink: 0; }
+.arg-text { font-size: 12px; color: var(--texto); font-weight: 500; line-height: 1.3; }
+
+/* REGLAS */
+.reglas-list { padding: 0 12px 12px; }
+.regla-card { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 14px; padding: 16px 14px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(13,27,75,0.07); position: relative; }
+.regla-num { position: absolute; top: -8px; left: 12px; width: 28px; height: 28px; background: var(--verde); color: var(--azul); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 16px; }
+.regla-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 18px; color: var(--azul); padding-left: 30px; line-height: 1.2; margin-bottom: 6px; }
+.regla-intro { font-size: 13px; color: var(--texto-claro); margin: 8px 0 6px; }
+.regla-list { list-style: none; padding-left: 0; }
+.regla-list li { position: relative; padding: 5px 0 5px 18px; font-size: 13px; color: var(--texto); line-height: 1.5; }
+.regla-list li::before { content: "→"; position: absolute; left: 0; color: var(--azul-claro); font-weight: 700; }
+.regla-idea { margin-top: 12px; padding: 10px 12px; background: linear-gradient(135deg, #FFFBE6, #FFF3CD); border-left: 3px solid var(--amarillo); border-radius: 0 8px 8px 0; font-size: 13px; color: var(--texto); font-weight: 500; line-height: 1.5; }
+
+/* RUBROS */
+.group-title { padding: 14px 16px 4px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; color: var(--texto-claro); text-transform: uppercase; letter-spacing: 0.8px; }
+.rubro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 4px 12px 4px; }
+.rubro-btn { background: var(--azul); border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; transition: transform 0.15s, background 0.15s; border: none; min-height: 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.rubro-btn:active { transform: scale(0.96); background: var(--azul-medio); }
+.rubro-btn .rub-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+.rubro-btn .rub-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; color: var(--blanco); display: block; line-height: 1.15; }
+
+/* RUBRO DETAIL */
+.rubro-detail { display: none; }
+.rubro-detail.active { display: block; }
+.rubro-back { display: flex; align-items: center; gap: 8px; padding: 12px 16px; cursor: pointer; background: var(--gris); border-bottom: 1px solid var(--gris-borde); }
+.rubro-back span { font-size: 13px; color: var(--azul-medio); font-weight: 600; }
+.rubro-hero { background: linear-gradient(135deg, var(--azul), var(--azul-medio)); padding: 20px 16px; }
+.rubro-hero-icon { font-size: 36px; display: block; margin-bottom: 6px; }
+.rubro-hero-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 22px; color: var(--blanco); line-height: 1.1; }
+.rubro-hero-tip { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 6px; line-height: 1.5; }
+
+/* TAG SECTIONS */
+.tag-section { padding: 14px 0 2px; }
+.tag-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; color: var(--texto-claro); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 6px; }
+
+/* LISTS */
+.list-clean, .list-q, .list-arrow, .list-num { list-style: none; padding-left: 0; }
+.list-clean li { padding: 5px 0 5px 18px; position: relative; font-size: 13px; color: var(--texto); line-height: 1.4; }
+.list-clean li::before { content: "•"; position: absolute; left: 4px; color: var(--azul-claro); font-weight: 700; }
+.list-q li { padding: 5px 0 5px 22px; position: relative; font-size: 13px; color: var(--texto); line-height: 1.5; }
+.list-q li::before { content: "❓"; position: absolute; left: 0; font-size: 11px; }
+.list-arrow li { padding: 5px 0 5px 18px; position: relative; font-size: 13px; color: var(--texto); line-height: 1.5; }
+.list-arrow li::before { content: "→"; position: absolute; left: 0; color: var(--verde-oscuro); font-weight: 700; }
+.list-num { counter-reset: numli; }
+.list-num li { counter-increment: numli; padding: 5px 0 5px 26px; position: relative; font-size: 13px; color: var(--texto); line-height: 1.5; }
+.list-num li::before { content: counter(numli); position: absolute; left: 0; width: 18px; height: 18px; background: var(--azul); color: var(--verde); border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+
+/* REVISAR PILL */
+.revisar-pill { display: inline-block; padding: 1px 8px; background: rgba(255,140,0,0.15); color: #8B4400; border-radius: 20px; font-size: 10px; font-weight: 700; margin-left: 4px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* BOXES */
+.upsell-box { background: linear-gradient(135deg, #F0FFF0, #E8FFD0); border-left: 3px solid var(--verde-oscuro); border-radius: 0 8px 8px 0; padding: 12px 14px; margin: 12px 0; }
+.upsell-box .tip-label { font-size: 11px; font-weight: 700; color: #3A7000; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-family: 'Barlow Condensed', sans-serif; }
+.tip-box { background: linear-gradient(135deg, #FFFBE6, #FFF3CD); border-left: 3px solid var(--amarillo); border-radius: 0 8px 8px 0; padding: 10px 12px; margin: 10px 0; }
+.tip-box .tip-label { font-size: 11px; font-weight: 700; color: #8B6000; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-family: 'Barlow Condensed', sans-serif; }
+.tip-box p { font-size: 13px; color: var(--texto); line-height: 1.5; }
+.warn-box { background: linear-gradient(135deg, #FFF0E0, #FFE0C0); border-left: 3px solid var(--naranja); border-radius: 0 8px 8px 0; padding: 12px 14px; margin: 10px 0; }
+.warn-box .tip-label { font-size: 12px; font-weight: 700; color: #8B4400; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-family: 'Barlow Condensed', sans-serif; }
+.warn-box p { font-size: 13px; color: var(--texto); line-height: 1.5; }
+
+/* CARDS (collapsible) */
+.card { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 14px; margin: 0 0 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(13,27,75,0.07); }
+.card-header { display: flex; align-items: center; gap: 10px; padding: 13px 14px; cursor: pointer; user-select: none; }
+.card-icon { font-size: 22px; width: 30px; text-align: center; flex-shrink: 0; }
+.card-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; color: var(--azul); flex: 1; line-height: 1.2; }
+.card-arrow { font-size: 11px; color: var(--texto-claro); transition: transform 0.2s; flex-shrink: 0; }
+.card-arrow.open { transform: rotate(90deg); }
+.card-body { display: none; padding: 4px 14px 14px; border-top: 1px solid var(--gris-borde); }
+.card-body.open { display: block; }
+
+/* IMPRESOS specific */
+.info-card { background: linear-gradient(135deg, var(--azul), var(--azul-medio)); border-radius: 12px; padding: 14px 16px; margin: 0 0 12px; }
+.info-card-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; color: var(--verde); margin-bottom: 4px; }
+.info-card-text { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.5; }
+.quote-box { background: var(--gris); border-radius: 10px; padding: 12px 14px; margin: 6px 0; font-size: 13px; color: var(--texto); line-height: 1.6; font-style: italic; border-left: 3px solid var(--azul-claro); }
+
+/* OBJECTION boxes */
+.objection-box { background: var(--gris); border-radius: 10px; padding: 12px 14px; margin: 10px 0; }
+.obj-question { font-size: 14px; font-weight: 700; color: var(--rojo); margin-bottom: 6px; font-family: 'Barlow Condensed', sans-serif; }
+.obj-answer { font-size: 13px; color: var(--texto); line-height: 1.55; }
+
+/* CAPACITACIÓN blocks */
+.cap-block { margin: 8px 0; }
+.cap-block-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; color: var(--texto-claro); letter-spacing: 0.6px; text-transform: uppercase; margin-bottom: 6px; }
+.rule-mini { background: var(--azul); border-radius: 10px; padding: 12px 14px; margin: 8px 0; }
+.rule-mini-label { font-size: 10px; font-weight: 700; color: var(--verde); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; font-family: 'Barlow Condensed', sans-serif; }
+.rule-mini-text { font-size: 14px; color: var(--blanco); line-height: 1.4; font-weight: 600; }
+.info-block { border-radius: 10px; padding: 10px 14px; margin: 8px 0; }
+.info-block-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-family: 'Barlow Condensed', sans-serif; }
+.info-block-text { font-size: 13px; line-height: 1.5; }
+.info-block-red { background: rgba(255,68,68,0.08); border-left: 3px solid var(--rojo); }
+.info-block-red .info-block-label { color: #990000; }
+.info-block-red .info-block-text { color: var(--texto); }
+.info-block-red ul li { color: var(--texto); }
+.info-block-green { background: rgba(170,255,0,0.12); border-left: 3px solid var(--verde-oscuro); }
+.info-block-green .info-block-label { color: #3A7000; }
+.info-block-green .info-block-text { color: var(--texto); }
+
+/* Objection full (capacitación) */
+.obj-full { background: var(--gris); border-radius: 12px; padding: 12px 14px; margin: 10px 0; }
+.obj-full-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 16px; color: var(--rojo); margin-bottom: 8px; }
+.obj-row { display: grid; grid-template-columns: 110px 1fr; gap: 8px; padding: 8px 0; border-top: 1px solid var(--gris-borde); }
+.obj-row:first-of-type { border-top: none; padding-top: 4px; }
+.obj-row-tag { font-size: 11px; font-weight: 700; color: var(--texto-claro); text-transform: uppercase; letter-spacing: 0.4px; line-height: 1.3; padding-top: 1px; }
+.obj-row-text { font-size: 13px; color: var(--texto); line-height: 1.5; }
+.obj-row-red .obj-row-tag { color: #990000; }
+.obj-row-green .obj-row-tag { color: #3A7000; }
+.obj-row-blue .obj-row-tag { color: var(--azul); }
+
+/* TEMPORADAS */
+.temp-row { display: grid; grid-template-columns: 130px 1fr; gap: 8px; padding: 8px 0; border-top: 1px solid var(--gris-borde); align-items: start; }
+.temp-row:first-of-type { border-top: none; padding-top: 4px; }
+.temp-row-label { font-size: 11px; font-weight: 700; color: var(--texto-claro); text-transform: uppercase; letter-spacing: 0.3px; line-height: 1.3; }
+.temp-row-text { font-size: 13px; color: var(--texto); line-height: 1.5; }
+.quote-mini { font-style: italic; color: var(--azul-medio); }
+
+/* WHATSAPP */
+.wpp-cat { margin: 0 12px 14px; }
+.wpp-cat-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 17px; color: var(--azul); padding: 10px 0 8px; border-bottom: 2px solid var(--verde); margin-bottom: 8px; }
+.wpp-msg { background: var(--blanco); border: 1px solid var(--gris-borde); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(13,27,75,0.05); }
+.wpp-msg-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; color: var(--azul-medio); margin-bottom: 6px; }
+.wpp-msg-text { font-size: 13px; color: var(--texto); line-height: 1.55; white-space: pre-wrap; background: var(--gris); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+.wpp-copy-btn { background: #128C7E; color: var(--blanco); border: none; border-radius: 8px; padding: 7px 14px; font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+.wpp-copy-btn:active { opacity: 0.85; }
+
+/* BOTTOM NAV */
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--azul); display: flex; border-top: 1px solid rgba(255,255,255,0.1); z-index: 100; padding-bottom: env(safe-area-inset-bottom, 0px); }
+.nav-btn { flex: 1; min-height: 52px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 2px 10px; cursor: pointer; border: none; background: none; transition: background 0.15s; position: relative; }
+.nav-btn.active { background: rgba(170,255,0,0.1); }
+.nav-btn .nav-icon { font-size: 18px; }
+.nav-btn .nav-label { font-size: 9px; color: rgba(255,255,255,0.5); margin-top: 2px; font-weight: 500; }
+.nav-btn.active .nav-label { color: var(--verde); }
+.nav-btn.active::after { content:''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 22px; height: 2px; background: var(--verde); border-radius: 0 0 4px 4px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--azul); color: var(--verde); padding: 8px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 300; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
 </head>
 <body>
+<div class="app">
 
   <div class="header">
-    <div class="header-content">
-      <div class="header-top">
-        <div class="title-block">
-          <h1 id="total-amount">$0</h1>
-          <p>Total en fondos activos</p>
-        </div>
-        <div class="tc-input">
-          <span>$</span>
-          <input type="number" id="tc-input" value="1420" />
-        </div>
-      </div>
-
-      <div class="conversor-section">
-        <div class="conversor-header">
-          <span>💱 Conversor rápido</span>
-          <button id="conversor-toggle">Ocultar ▲</button>
-        </div>
-        <div class="conversor-grid" id="conversor-grid"></div>
-      </div>
-
-      <div class="tabs">
-        <button class="tab-button active" onclick="switchTab('fondos')">Fondos</button>
-        <button class="tab-button" onclick="switchTab('simulador')">Simulador</button>
-        <button class="tab-button" onclick="switchTab('calculadoras')">Calculadoras</button>
-      </div>
+    <div class="header-logo">EP</div>
+    <div>
+      <div class="header-title">EMMAPEL</div>
+      <div class="header-sub">Manual de Ventas</div>
     </div>
+    <div class="header-badge">VENDEDORES</div>
   </div>
 
   <div class="content">
-    <!-- ════════════════════ FONDOS ════════════════════ -->
-    <div id="fondos" class="tab-content active">
-      <div class="funds-grid" id="funds-grid"></div>
+
+    <!-- ════════ INICIO ════════ -->
+    <div class="page active" id="page-inicio">
+      <div class="welcome">
+        <div class="welcome-title">Manual de Ventas Emmapel</div>
+        <div class="welcome-sub">Guía rápida para vender mejor en la calle</div>
+      </div>
+
+      <div class="block-title">¿Qué necesitás hacer ahora?</div>
+      <div class="shortcut-list">
+        <div class="shortcut" onclick="switchPage('rubros')" style="background: #1A3A7A">
+      <div class="shortcut-icon">🏪</div>
+      <div class="shortcut-body">
+        <div class="shortcut-title">Voy a visitar un cliente</div>
+        <div class="shortcut-sub">Ver qué ofrecer según rubro</div>
+      </div>
+      <div class="shortcut-arrow">›</div>
+    </div><div class="shortcut" onclick="switchPage('capacitacion')" style="background: #5A4A8B">
+      <div class="shortcut-icon">📝</div>
+      <div class="shortcut-body">
+        <div class="shortcut-title">Tengo que levantar un pedido</div>
+        <div class="shortcut-sub">Guía rápida para repetir y sumar productos</div>
+      </div>
+      <div class="shortcut-arrow">›</div>
+    </div><div class="shortcut" onclick="switchPage('whatsapp')" style="background: #128C7E">
+      <div class="shortcut-icon">💬</div>
+      <div class="shortcut-body">
+        <div class="shortcut-title">Tengo que responder WhatsApp</div>
+        <div class="shortcut-sub">Copiar respuestas rápidas</div>
+      </div>
+      <div class="shortcut-arrow">›</div>
+    </div><div class="shortcut" onclick="switchPage('impresos')" style="background: #8B4A00">
+      <div class="shortcut-icon">🖨️</div>
+      <div class="shortcut-body">
+        <div class="shortcut-title">Quiero ofrecer impresos</div>
+        <div class="shortcut-sub">Bolsas, servilletas, cintas, cajas personalizadas</div>
+      </div>
+      <div class="shortcut-arrow">›</div>
+    </div><div class="shortcut" onclick="switchPage('temporada')" style="background: #CC5500">
+      <div class="shortcut-icon">📅</div>
+      <div class="shortcut-body">
+        <div class="shortcut-title">Quiero vender productos de temporada</div>
+        <div class="shortcut-sub">Fechas especiales, combos y rubros</div>
+      </div>
+      <div class="shortcut-arrow">›</div>
+    </div><div class="shortcut" onclick="switchPage('capacitacion')" style="background: #003380">
+      <div class="shortcut-icon">📚</div>
+      <div class="shortcut-body">
+        <div class="shortcut-title">Quiero capacitarme rápido</div>
+        <div class="shortcut-sub">Objeciones, cierres, tips de venta</div>
+      </div>
+      <div class="shortcut-arrow">›</div>
+    </div>
+      </div>
+
+      <div class="block-title">Argumentos rápidos para vender Emmapel</div>
+      <div class="block-sub">Para soltar en cualquier visita.</div>
+      <div class="args-grid">
+        <div class="arg-item"><span class="arg-icon">✅</span><span class="arg-text">Sin mínimo de compra</span></div><div class="arg-item"><span class="arg-icon">💰</span><span class="arg-text">Precios unitarios, por cantidad y mayoristas</span></div><div class="arg-item"><span class="arg-icon">🚚</span><span class="arg-text">Envíos a todo el país</span></div><div class="arg-item"><span class="arg-icon">📦</span><span class="arg-text">Variedad en packaging, descartables, bolsas, temporada e impresos</span></div><div class="arg-item"><span class="arg-icon">🤝</span><span class="arg-text">Atención personalizada</span></div><div class="arg-item"><span class="arg-icon">🏪</span><span class="arg-text">Mucha disponibilidad para comercios, emprendedores y reventa</span></div>
+      </div>
+
+      <div class="block-title">Reglas de venta Emmapel</div>
+      <div class="block-sub">Las 3 reglas que cambian todo.</div>
+      <div class="reglas-list">
+        <div class="regla-card">
+      <div class="regla-num">1</div>
+      <div class="regla-title">Primero entendé el negocio</div>
+      <div class="regla-intro">Antes de ofrecer, el vendedor tiene que preguntar:</div>
+      <ul class="regla-list"><li>¿Qué vendés más?</li><li>¿Qué se te termina más rápido?</li><li>¿Qué producto te cuesta conseguir?</li><li>¿Qué packaging usás para entregar?</li><li>¿Comprás por semana, quincena o mes?</li></ul>
+      <div class="regla-idea">No vender productos sueltos. Vender soluciones para ese negocio.</div>
+    </div><div class="regla-card">
+      <div class="regla-num">2</div>
+      <div class="regla-title">Nunca vendas un producto solo</div>
+      <div class="regla-intro">Si el cliente pide una cosa, pensá qué va alrededor:</div>
+      <ul class="regla-list"><li>Compra caja de pizza → ofrecer servilletas, bolsas camiseta, trípodes, vasos.</li><li>Compra caja de torta → ofrecer blonda, cinta, sticker, papel seda.</li><li>Compra vasos → ofrecer tapas, sorbetes, servilletas.</li><li>Compra bolsas → ofrecer etiquetas, papel, cajas o cinta.</li><li>Compra bandejas → ofrecer film, guantes o bolsas.</li></ul>
+      <div class="regla-idea">Siempre ofrecer el combo completo.</div>
+    </div><div class="regla-card">
+      <div class="regla-num">3</div>
+      <div class="regla-title">Siempre cerrar con una acción</div>
+      <div class="regla-intro">No irte con un "cualquier cosa me avisás". Cerrá con algo concreto:</div>
+      <ul class="regla-list"><li>¿Te cotizo estas dos opciones?</li><li>¿Querés probar con un pack chico?</li><li>¿Te paso precio por unidad y por bulto?</li><li>¿Cuándo vuelvo a consultarte?</li><li>¿Lo dejamos anotado para la próxima compra?</li><li>¿Querés que te lo mande por WhatsApp?</li></ul>
+      <div class="regla-idea">Aunque no compre hoy, tiene que quedar una próxima acción.</div>
+    </div>
+      </div>
+
+      <div style="height: 8px"></div>
     </div>
 
-    <!-- ════════════════════ SIMULADOR ════════════════════ -->
-    <div id="simulador" class="tab-content">
-      <div class="calculator-card">
-        <div class="calculator-title">🧮 Simulador de ahorro</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Capital inicial ($)</label>
-            <input type="text" class="input-field" id="sim-capital" value="0" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Ahorro mensual ($)</label>
-            <input type="text" class="input-field" id="sim-ahorro" value="600000" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Tasa (%/mes)</label>
-            <input type="number" class="input-field" id="sim-tasa" value="5" step="0.1" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Plazo (meses)</label>
-            <input type="number" class="input-field" id="sim-meses" value="24" />
-          </div>
+    <!-- ════════ RUBROS ════════ -->
+    <div class="page" id="page-rubros">
+      <div id="rubros-list">
+        <div class="section-title">Rubros de clientes</div>
+        <div class="section-sub">Tocá un rubro para ver qué ofrecerle y cómo venderle mejor.</div>
+        <div class="group-title">🍽️ Gastronómicos</div><div class="rubro-grid"><button class="rubro-btn" onclick="showRubro('pizzeria')"><span class="rub-icon">🍕</span><span class="rub-name">Pizzería / Rotisería / Casa de comidas</span></button><button class="rubro-btn" onclick="showRubro('restaurante')"><span class="rub-icon">🍴</span><span class="rub-name">Restaurante / Bar / Food truck</span></button><button class="rubro-btn" onclick="showRubro('cafeteria')"><span class="rub-icon">☕</span><span class="rub-name">Cafetería / Heladería</span></button><button class="rubro-btn" onclick="showRubro('panaderia')"><span class="rub-icon">🥐</span><span class="rub-name">Panadería / Confitería / Pastelería</span></button><button class="rubro-btn" onclick="showRubro('catering')"><span class="rub-icon">🍽️</span><span class="rub-name">Catering / Eventos gastronómicos</span></button></div><div class="group-title">🏬 Consumo diario</div><div class="rubro-grid"><button class="rubro-btn" onclick="showRubro('supermercado')"><span class="rub-icon">🛒</span><span class="rub-name">Supermercado / Almacén</span></button><button class="rubro-btn" onclick="showRubro('kiosco')"><span class="rub-icon">🏪</span><span class="rub-name">Kiosco / Minimercado</span></button><button class="rubro-btn" onclick="showRubro('carniceria')"><span class="rub-icon">🥩</span><span class="rub-name">Carnicería / Pescadería</span></button><button class="rubro-btn" onclick="showRubro('verduleria')"><span class="rub-icon">🥬</span><span class="rub-name">Verdulería / Frutería</span></button><button class="rubro-btn" onclick="showRubro('fiambreria')"><span class="rub-icon">🧀</span><span class="rub-name">Fiambrería / Quesería / Granja</span></button></div><div class="group-title">🎁 Regalos y minorista</div><div class="rubro-grid"><button class="rubro-btn" onclick="showRubro('cotillon')"><span class="rub-icon">🎉</span><span class="rub-name">Cotillón / Eventos / Fiestas</span></button><button class="rubro-btn" onclick="showRubro('regaleria')"><span class="rub-icon">🌸</span><span class="rub-name">Regalería / Bazar / Florería</span></button><button class="rubro-btn" onclick="showRubro('indumentaria')"><span class="rub-icon">👗</span><span class="rub-name">Indumentaria / Calzado</span></button><button class="rubro-btn" onclick="showRubro('emprendedores')"><span class="rub-icon">📦</span><span class="rub-name">Emprendedores / Tienda online / Ecommerce</span></button></div><div class="group-title">🏥 Otros rubros</div><div class="rubro-grid"><button class="rubro-btn" onclick="showRubro('farmacia')"><span class="rub-icon">💊</span><span class="rub-name">Farmacia / Perfumería</span></button><button class="rubro-btn" onclick="showRubro('dietetica')"><span class="rub-icon">🌱</span><span class="rub-name">Dietética / Almacén natural</span></button><button class="rubro-btn" onclick="showRubro('libreria')"><span class="rub-icon">📚</span><span class="rub-name">Librería / Fotocopiadora</span></button><button class="rubro-btn" onclick="showRubro('mayorista')"><span class="rub-icon">🏭</span><span class="rub-name">Mayorista / Reventa</span></button></div>
+        <div style="height: 12px"></div>
+      </div>
+      
+    <div class="rubro-detail" id="rubro-pizzeria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🍕</span>
+        <div class="rubro-hero-name">Pizzería / Rotisería / Casa de comidas</div>
+        <div class="rubro-hero-tip">Compra por volumen y rotación alta. Le importa que el packaging mantenga la temperatura y que el delivery se vea profesional.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        <div class="warn-box"><div class="tip-label">⚠️ Atención</div><p>⚠️ No usar nunca "bolsa de pizza". Diferenciar: <b>Caja de pizza</b> es para pizza lista. <b>Bolsa de pre-pizza</b> solo se usa para prepizzas.</p></div>
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Cajas de pizza</li><li>Cajas de empanadas</li><li>Bandejas descartables</li><li>Envases take away</li><li>Potes con tapa para salsas</li><li>Bolsas camiseta</li><li>Servilletas</li><li>Vasos</li><li>Sorbetes</li><li>Cubiertos descartables</li><li>Film</li><li>Papel aluminio</li><li>Papel parafinado o manteca</li><li>Bolsas de pre-pizza (solo si venden prepizzas)</li></ul>
         </div>
-        <button class="modal-button" onclick="calcularSimulador()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="simulador-resultados"></div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Trípodes para pizza</li><li>Etiquetas para pedidos</li><li>Bolsas para delivery</li><li>Guantes</li><li>Rollos de cocina</li><li>Envases microondables</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Cuánto vendés por día? ¿Cuánto delivery hacés?</li><li>¿Usás bolsas de pre-pizza también o solo cajas?</li><li>¿Tenés bolsa identificada para el delivery?</li><li>¿Cómo entregás las salsas o aderezos?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Caja de pizza + servilletas + bolsa camiseta</li><li>Bandeja + film + cubiertos</li><li>Vaso + tapa + sorbete</li><li>Pote de salsa + etiqueta</li><li>Caja de empanadas + servilletas</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Cajas impresas</li><li>Bolsas camiseta impresas</li><li>Bolsas delivery de papel impresas</li><li>Servilletas impresas</li><li>Bobinas de papel impresas</li><li>Cintas impresas</li></ul>
+        </div>
       </div>
     </div>
-
-    <!-- ════════════════════ CALCULADORAS ════════════════════ -->
-    <div id="calculadoras" class="tab-content">
-      <!-- Porcentaje -->
-      <div class="calculator-card">
-        <div class="calculator-title">🔢 Porcentaje de un número</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Número</label>
-            <input type="text" class="input-field" id="pct-numero" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Porcentaje (%)</label>
-            <input type="text" class="input-field" id="pct-valor" />
-          </div>
-        </div>
-        <button class="modal-button" onclick="calcularPorcentaje()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="pct-resultado"></div>
+    <div class="rubro-detail" id="rubro-restaurante">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
       </div>
-
-      <!-- Días -->
-      <div class="calculator-card">
-        <div class="calculator-title">📅 Días hasta una fecha</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Fecha</label>
-            <input type="date" class="input-field" id="dias-fecha" />
-          </div>
-        </div>
-        <button class="modal-button" onclick="calcularDias()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="dias-resultado"></div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🍴</span>
+        <div class="rubro-hero-name">Restaurante / Bar / Food truck</div>
+        <div class="rubro-hero-tip">Necesita variedad: mostrador, salón, delivery y take away. Compra mixta y constante.</div>
       </div>
+      <div style="padding: 12px 14px">
+        
 
-      <!-- Conversor USD <-> ARS -->
-      <div class="calculator-card">
-        <div class="calculator-title">💱 Conversor $ ↔ USD</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Cantidad</label>
-            <input type="text" class="input-field" id="conv-cantidad" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">De</label>
-            <select class="input-field" id="conv-de">
-              <option value="pesos">Pesos</option>
-              <option value="usd">USD</option>
-            </select>
-          </div>
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Envases take away</li><li>Bandejas</li><li>Bowls</li><li>Cubiertos</li><li>Vasos</li><li>Sorbetes</li><li>Servilletas</li><li>Bolsas kraft</li><li>Bolsas camiseta</li><li>Papel aluminio</li><li>Film</li><li>Potes para salsas</li><li>Cajas hamburgueseras o para papas</li></ul>
         </div>
-        <button class="modal-button" onclick="calcularConversor()" style="background: #0EA5E9; margin-top: 0;">Convertir</button>
-        <div id="conv-resultado"></div>
-      </div>
 
-      <!-- Inflación -->
-      <div class="calculator-card">
-        <div class="calculator-title">📉 Calculadora de inflación</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Valor hoy ($)</label>
-            <input type="text" class="input-field" id="inf-valor" value="1000000" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Inflación (%/mes)</label>
-            <input type="number" class="input-field" id="inf-tasa" value="4" step="0.1" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Plazo (meses)</label>
-            <input type="number" class="input-field" id="inf-meses" value="12" />
-          </div>
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Removedores</li><li>Tapas para vasos</li><li>Individuales</li><li>Bolsas de residuos</li><li>Guantes</li><li>Servilletas premium</li><li>Cajas para delivery</li></ul>
         </div>
-        <button class="modal-button" onclick="calcularInflacion()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="inf-resultado"></div>
-      </div>
 
-      <!-- Tipo de cambio -->
-      <div class="calculator-card">
-        <div class="calculator-title">💵 Simulador de tipo de cambio</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">TC actual ($/USD)</label>
-            <input type="number" class="input-field" id="tc-actual" value="1420" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Suba mensual (%)</label>
-            <input type="number" class="input-field" id="tc-suba" value="2" step="0.1" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Plazo (meses)</label>
-            <input type="number" class="input-field" id="tc-meses" value="12" />
-          </div>
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Hacés mucho delivery o más salón?</li><li>¿Qué te gana en delivery: pizzas, hamburguesas, comida casera?</li><li>¿Usás vasos con tapa o sin tapa?</li><li>¿Tenés bolsa propia o usás camiseta común?</li></ul>
         </div>
-        <button class="modal-button" onclick="calcularTC()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="tc-resultado"></div>
-      </div>
 
-      <!-- Cuotas -->
-      <div class="calculator-card">
-        <div class="calculator-title">🏦 Calculadora de cuotas</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Capital ($)</label>
-            <input type="text" class="input-field" id="cuota-capital" value="1000000" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Tasa (%/mes)</label>
-            <input type="number" class="input-field" id="cuota-tasa" value="5" step="0.1" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Nro de cuotas</label>
-            <input type="number" class="input-field" id="cuota-numero" value="12" />
-          </div>
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Si compra vasos → ofrecer tapas y sorbetes</li><li>Si compra envases → ofrecer bolsas de entrega</li><li>Si compra bandejas → ofrecer film y cubiertos</li><li>Si vende hamburguesas o papas → ofrecer cajas específicas</li></ul>
         </div>
-        <button class="modal-button" onclick="calcularCuotas()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="cuota-resultado"></div>
-      </div>
 
-      <!-- Interés compuesto -->
-      <div class="calculator-card">
-        <div class="calculator-title">📈 Interés compuesto</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Capital ($)</label>
-            <input type="text" class="input-field" id="intcomp-capital" value="1000000" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Tasa (%/mes)</label>
-            <input type="number" class="input-field" id="intcomp-tasa" value="5" step="0.1" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Plazo (meses)</label>
-            <input type="number" class="input-field" id="intcomp-meses" value="24" />
-          </div>
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Servilletas impresas</li><li>Bolsas delivery impresas</li><li>Bobinas de papel impresas</li><li>Cintas impresas</li><li>Cajas impresas</li></ul>
         </div>
-        <button class="modal-button" onclick="calcularInteresCompuesto()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="intcomp-resultado"></div>
-      </div>
-
-      <!-- Rendimiento real -->
-      <div class="calculator-card">
-        <div class="calculator-title">🔬 Rendimiento real vs inflación</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Rendimiento nominal (%/mes)</label>
-            <input type="number" class="input-field" id="real-nominal" value="5" step="0.1" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Inflación (%/mes)</label>
-            <input type="number" class="input-field" id="real-inflacion" value="4" step="0.1" />
-          </div>
-        </div>
-        <button class="modal-button" onclick="calcularRendimientoReal()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="real-resultado"></div>
-      </div>
-
-      <!-- ¿Cuándo llego a mi meta? -->
-      <div class="calculator-card">
-        <div class="calculator-title">🎯 ¿Cuándo llego a mi meta?</div>
-        <div class="calculator-grid">
-          <div class="input-group">
-            <label class="input-label">Tengo actualmente ($)</label>
-            <input type="text" class="input-field" id="meta-tengo" value="0" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Ahorro por mes ($)</label>
-            <input type="text" class="input-field" id="meta-ahorro" value="600000" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Tasa (%/mes)</label>
-            <input type="number" class="input-field" id="meta-tasa" value="5" step="0.1" />
-          </div>
-          <div class="input-group">
-            <label class="input-label">Meta ($)</label>
-            <input type="text" class="input-field" id="meta-meta" value="10000000" />
-          </div>
-        </div>
-        <button class="modal-button" onclick="calcularCuandoMeta()" style="background: #0EA5E9; margin-top: 0;">Calcular</button>
-        <div id="meta-resultado"></div>
       </div>
     </div>
+    <div class="rubro-detail" id="rubro-cafeteria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">☕</span>
+        <div class="rubro-hero-name">Cafetería / Heladería</div>
+        <div class="rubro-hero-tip">Le importa la estética y la practicidad para take away. Vende experiencia, no solo producto.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Vasos térmicos</li><li>Tapas para vasos</li><li>Vasos plásticos</li><li>Vasos polipapel</li><li>Potes de helado</li><li>Tapas para potes</li><li>Sorbetes</li><li>Servilletas</li><li>Cucharitas</li><li>Agitadores</li><li>Bolsas para take away</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Collarines para vasos calientes <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Tapas domo</li><li>Potes chicos para toppings</li><li>Cajas para muffins o cookies</li><li>Bolsas de papel</li><li>Stickers para cerrar vasos o bolsas</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Qué se mueve más, café para llevar o consumo en local?</li><li>¿Ofrecés desayunos o pastelería para llevar?</li><li>¿Trabajás con vaso térmico, polipapel o plástico?</li><li>¿Tenés bolsa para regalo o solo bolsa común?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Vaso térmico + tapa + removedor + servilleta</li><li>Pote de helado + cuchara + bolsa</li><li>Café take away + bolsa de papel + sticker</li><li>Cookie / muffin + caja o bolsa + sticker</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Servilletas impresas</li><li>Vasos impresos <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Bolsas de papel impresas</li><li>Cintas impresas</li><li>Cajas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-panaderia">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🥐</span>
+        <div class="rubro-hero-name">Panadería / Confitería / Pastelería</div>
+        <div class="rubro-hero-tip">Compra mucho packaging para presentación. Se mueve fuerte por temporada (Pascuas, Navidad, Día de la Madre).</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Cajas para torta</li><li>Cajas con visor</li><li>Cajas para masas</li><li>Cajas para cupcakes</li><li>Blondas</li><li>Bandejas de cartón</li><li>Discos para torta</li><li>Pirotines</li><li>Bolsas de papel</li><li>Papel manteca</li><li>Papel sulfito</li><li>Moldes para budín</li><li>Moldes para pan dulce</li><li>Packaging de temporada</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Cintas</li><li>Stickers</li><li>Tags</li><li>Papel seda</li><li>Celofán</li><li>Fajas</li><li>Mangas</li><li>Placas para chocolate</li><li>Bolsas de papel impresas</li><li>Servilletas</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Trabajás mucho con tortas por encargo?</li><li>¿Vendés productos de temporada (Pascuas, Navidad, Día de la Madre)?</li><li>¿Cómo entregás los pedidos especiales?</li><li>¿Tenés algo con tu marca o todo liso?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Caja de torta + blonda + sticker</li><li>Caja de budín + faja + bolsa</li><li>Caja con visor + cinta + tag</li><li>Pirotines + bandeja + caja</li><li>Packaging de temporada + bolsa + sticker</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas de papel panadería impresas</li><li>Servilletas impresas</li><li>Bobinas de papel impresas</li><li>Cajas impresas</li><li>Cintas impresas</li><li>Bolsas boutique de papel impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-catering">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🍽️</span>
+        <div class="rubro-hero-name">Catering / Eventos gastronómicos</div>
+        <div class="rubro-hero-tip">Compras grandes y puntuales por evento. Necesita volumen, calidad media-alta y variedad.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Platos descartables</li><li>Vasos</li><li>Copas</li><li>Cubiertos</li><li>Servilletas</li><li>Bandejas</li><li>Manteles descartables</li><li>Potes</li><li>Cajas para viandas</li><li>Bolsas de residuos</li><li>Film</li><li>Aluminio</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Bandejas grandes</li><li>Guantes</li><li>Servilletas premium</li><li>Copas champagne</li><li>Sorbetes</li><li>Cajas para traslado</li><li>Bolsas reforzadas</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Para cuántas personas suelen ser tus eventos?</li><li>¿Trabajás con vianda armada o servicio de mesa?</li><li>¿Tenés evento próximo donde necesites stock?</li><li>¿Querés que armemos un combo evento por cantidad?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Combo evento: plato + vaso + cubierto + servilleta</li><li>Bandeja + film + guantes</li><li>Copas + servilletas premium</li><li>Vianda + cubierto + servilleta + bolsa</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Servilletas impresas</li><li>Cintas impresas</li><li>Cajas impresas</li><li>Bolsas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-supermercado">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🛒</span>
+        <div class="rubro-hero-name">Supermercado / Almacén</div>
+        <div class="rubro-hero-tip">Volumen alto y constante. El precio importa, pero también la disponibilidad de varios tamaños.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas camiseta</li><li>Bolsas de arranque / BD transparentes</li><li>Bolsas de residuos</li><li>Film</li><li>Aluminio</li><li>Papel para envolver</li><li>Bandejas</li><li>Rollos de cocina</li><li>Servilletas</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Cinta adhesiva</li><li>Etiquetas de precio</li><li>Guantes</li><li>Bolsas de papel</li><li>Rollos térmicos</li><li>Marcadores</li><li>Bolsas por tamaño</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Cuánta camiseta consumís por semana?</li><li>¿Qué tamaños usás más?</li><li>¿Tenés bolsas de arranque o solo camiseta?</li><li>¿Cuándo es tu próxima compra grande?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bolsa camiseta + bolsa BD</li><li>Film + aluminio</li><li>Bolsas de residuos + guantes</li><li>Etiquetas + marcador</li><li>Bolsas chicas + medianas + grandes</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas camiseta impresas</li><li>Bolsas riñón impresas</li><li>Bolsas de papel impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-kiosco">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🏪</span>
+        <div class="rubro-hero-name">Kiosco / Minimercado</div>
+        <div class="rubro-hero-tip">Compra chica pero frecuente. Le importa el precio y la rotación rápida.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas camiseta chicas</li><li>Vasos</li><li>Sorbetes</li><li>Servilletas</li><li>Bolsas de residuos</li><li>Film</li><li>Aluminio</li><li>Bolsas de papel</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Rollos térmicos</li><li>Cintas</li><li>Etiquetas</li><li>Vasos con tapa</li><li>Bolsitas chicas</li><li>Cucharitas</li><li>Productos de temporada chicos</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Qué te falta seguido?</li><li>¿Cuánta bolsa chica usás por semana?</li><li>¿Vendés productos de temporada o solo lo habitual?</li><li>¿Querés ver opciones nuevas que entraron?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Vasos + sorbetes</li><li>Bolsas + etiquetas</li><li>Film + aluminio</li><li>Bolsas chicas + bolsas medianas</li><li>Packaging de temporada para reventa</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas camiseta impresas</li><li>Bolsas riñón impresas</li><li>Bolsas de papel impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-carniceria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🥩</span>
+        <div class="rubro-hero-name">Carnicería / Pescadería</div>
+        <div class="rubro-hero-tip">Foco en higiene y resistencia. Necesita productos que aguanten peso y humedad.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas resistentes</li><li>Bolsas BD</li><li>Bandejas de telgopor o plásticas</li><li>Film</li><li>Guantes</li><li>Papel para envolver</li><li>Bolsas camiseta reforzadas</li><li>Bolsas de residuos</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Etiquetas</li><li>Rollos para envolver</li><li>Bandejas con tapa</li><li>Delantales descartables <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Separadores</li><li>Papel parafinado</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Te aguanta bien la bolsa que usás o se te rompe?</li><li>¿Cómo entregás los pedidos armados?</li><li>¿Vendés productos envasados o solo al corte?</li><li>¿Trabajás con etiquetas de precio?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bandeja + film</li><li>Bolsa reforzada + etiqueta</li><li>Guantes + bolsas de residuos</li><li>Papel + cinta</li><li>Bandeja con tapa para pedidos armados</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas camiseta impresas</li><li>Bobinas de papel impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-verduleria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🥬</span>
+        <div class="rubro-hero-name">Verdulería / Frutería</div>
+        <div class="rubro-hero-tip">Mucho consumo de bolsa. Volumen alto y precio sensible.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas BD transparentes</li><li>Bolsas camiseta</li><li>Bolsas de papel</li><li>Bandejas</li><li>Film</li><li>Cajas de cartón</li><li>Bolsas de residuos</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Etiquetas de precio</li><li>Papel para envolver frutas delicadas</li><li>Bandejas para combos</li><li>Cintas</li><li>Bolsas más grandes para pedidos</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Cuántas bolsas BD usás por día?</li><li>¿Hacés pedidos a domicilio?</li><li>¿Vendés combos armados (ej. ensalada lista)?</li><li>¿Te aguantan bien las bolsas o se rompen?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bolsa BD + bolsa camiseta</li><li>Bandeja + film</li><li>Caja de frutas + cinta</li><li>Bolsa de papel como opción más estética</li><li>Bolsas por distintos tamaños</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas camiseta impresas</li><li>Bolsas de papel impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-fiambreria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🧀</span>
+        <div class="rubro-hero-name">Fiambrería / Quesería / Granja</div>
+        <div class="rubro-hero-tip">Mix de descartables y packaging. Le importa la higiene y la presentación al corte.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Film</li><li>Papel parafinado</li><li>Papel manteca</li><li>Bolsas BD</li><li>Bandejas</li><li>Guantes</li><li>Etiquetas</li><li>Bolsas camiseta</li><li>Potes</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Separadores</li><li>Potes para salsas o untables</li><li>Bandejas con tapa</li><li>Rollos de cocina</li><li>Papel para envolver</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Cómo entregás los cortes? ¿Papel o film?</li><li>¿Vendés productos armados (picadas, viandas)?</li><li>¿Qué se te termina más rápido?</li><li>¿Usás bandeja con tapa para pedidos?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Papel + bolsa</li><li>Bandeja + film</li><li>Guantes + etiquetas</li><li>Pote + tapa + sticker</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bobinas de papel impresas</li><li>Bolsas camiseta impresas</li><li>Servilletas impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-cotillon">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🎉</span>
+        <div class="rubro-hero-name">Cotillón / Eventos / Fiestas</div>
+        <div class="rubro-hero-tip">Mucha estacionalidad. Compra por temáticas y eventos puntuales. Le importa la variedad y novedad.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Globos</li><li>Vasos temáticos</li><li>Platos temáticos</li><li>Servilletas</li><li>Bolsitas</li><li>Cajas para regalo</li><li>Stickers</li><li>Cintas</li><li>Velas</li><li>Toppers</li><li>Manteles</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Papel seda</li><li>Tags</li><li>Celofán</li><li>Bolsas friselina</li><li>Guirnaldas</li><li>Piñatas</li><li>Accesorios para globos</li><li>Packaging de temporada</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Cuáles son tus fechas más fuertes?</li><li>¿Vendés cumpleaños temáticos armados?</li><li>¿Tenés stock para Navidad / Día del Niño / temporadas?</li><li>¿Querés ver novedades antes de que arranque la temporada?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Globo + cinta + peso</li><li>Caja + papel seda + sticker</li><li>Platos + vasos + servilletas</li><li>Cumpleaños temático completo</li><li>Bolsita + sticker + cinta</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas friselina impresas</li><li>Bolsas de papel impresas</li><li>Cajas impresas</li><li>Cintas impresas</li><li>Servilletas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-regaleria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🌸</span>
+        <div class="rubro-hero-name">Regalería / Bazar / Florería</div>
+        <div class="rubro-hero-tip">Foco en estética y presentación. El packaging es parte del producto.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas boutique</li><li>Bolsas de papel</li><li>Cajas de regalo</li><li>Papel seda</li><li>Cintas</li><li>Moños</li><li>Stickers</li><li>Tags</li><li>Celofán</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Fajas</li><li>Tarjetas</li><li>Bolsas friselina</li><li>Cajas con visor</li><li>Packaging de temporada</li><li>Papel kraft</li><li>Bolsas riñón</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Tenés bolsa con tu marca?</li><li>¿Cómo presentás los regalos especiales?</li><li>¿Trabajás con packaging premium o solo común?</li><li>¿Qué fechas fuertes tenés cerca?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bolsa + papel seda</li><li>Caja + cinta + tag</li><li>Ramo/flor + celofán + moño</li><li>Regalo + sticker de cierre</li><li>Packaging común + packaging premium</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas boutique de papel impresas</li><li>Bolsas riñón impresas</li><li>Bolsas friselina impresas</li><li>Cajas impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-indumentaria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">👗</span>
+        <div class="rubro-hero-name">Indumentaria / Calzado</div>
+        <div class="rubro-hero-tip">El packaging es parte de la experiencia de compra. Vende imagen y diferenciación.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas boutique</li><li>Bolsas riñón</li><li>Bolsas de papel</li><li>Cajas</li><li>Papel seda</li><li>Stickers</li><li>Cintas</li><li>Bolsas ecommerce <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Tarjetas de agradecimiento</li><li>Etiquetas adhesivas</li><li>Bolsas con cierre adhesivo <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Packaging de fechas especiales</li><li>Cajas para envíos</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Vendés más en local o por redes / online?</li><li>¿Tenés packaging con tu marca?</li><li>¿Cómo entregás los envíos?</li><li>¿Querés tener algo especial para regalo / fechas?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bolsa + papel seda + sticker</li><li>Caja de envío + bolsa interna</li><li>Packaging común + packaging premium para regalos</li><li>Bolsa lisa + opción impresa</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas boutique de papel impresas</li><li>Bolsas riñón de plástico impresas</li><li>Bolsas friselina impresas</li><li>Cajas impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-emprendedores">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">📦</span>
+        <div class="rubro-hero-name">Emprendedores / Tienda online / Ecommerce</div>
+        <div class="rubro-hero-tip">Compra inicial chica y crece con el tiempo. Le importa el unboxing y la marca propia.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Cajas para envío</li><li>Bolsas ecommerce con adhesivo <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Bolsas riñón</li><li>Papel seda</li><li>Stickers</li><li>Tarjetas</li><li>Cinta adhesiva</li><li>Papel kraft</li><li>Bolsas de papel</li><li>Cajas de packaging</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Relleno protector <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Etiquetas</li><li>Stickers de frágil <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Cajas por medida</li><li>Packaging para unboxing</li><li>Bolsas para entrega</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Cuántos envíos hacés por semana?</li><li>¿Qué producto vendés? ¿Pesa, es frágil?</li><li>¿Tenés marca propia, logo, identidad?</li><li>¿Cómo es tu unboxing actual?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Caja + papel seda + sticker</li><li>Bolsa ecommerce + tarjeta de agradecimiento</li><li>Pack inicial para emprendedores</li><li>Combo por cantidad para ahorrar</li><li>Packaging de temporada para fechas comerciales</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas riñón impresas</li><li>Bolsas boutique impresas</li><li>Bolsas friselina impresas</li><li>Cajas impresas</li><li>Cintas impresas</li><li>Stickers personalizados <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-farmacia">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">💊</span>
+        <div class="rubro-hero-name">Farmacia / Perfumería</div>
+        <div class="rubro-hero-tip">Compra mixta: alta rotación en bolsas y guantes, baja en packaging premium para regalos.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas camiseta chicas</li><li>Bolsas de papel</li><li>Bolsas boutique</li><li>Stickers</li><li>Cajas chicas</li><li>Papel seda</li><li>Bolsas de residuos</li><li>Guantes</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Packaging para regalos</li><li>Cintas</li><li>Tags</li><li>Bolsas transparentes</li><li>Envases chicos para muestras <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Bolsas premium para perfumería</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Vendés perfumería de regalo o solo lo habitual?</li><li>¿Qué tamaño de bolsa usás más?</li><li>¿Tenés algo especial para fechas (Madre, Navidad, San Valentín)?</li><li>¿Querés ver opciones premium para diferenciar?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bolsa simple + bolsa premium para regalo</li><li>Caja chica + papel seda</li><li>Sticker de cierre + bolsa de papel</li><li>Packaging especial para Madre, Navidad, San Valentín</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas de papel impresas</li><li>Bolsas boutique impresas</li><li>Bolsas riñón impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-dietetica">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🌱</span>
+        <div class="rubro-hero-name">Dietética / Almacén natural</div>
+        <div class="rubro-hero-tip">Foco en granel y opciones ecológicas. Le importa la imagen natural / saludable.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas kraft</li><li>Bolsas de papel</li><li>Bolsas transparentes</li><li>Etiquetas</li><li>Frascos o potes <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Bolsas camiseta</li><li>Cajas</li><li>Papel para envolver</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Stickers</li><li>Cintas</li><li>Bolsas con cierre <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Envases para granel</li><li>Packaging ecológico <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Vendés granel? ¿Cómo lo envasás?</li><li>¿Te interesa packaging ecológico / kraft?</li><li>¿Tenés etiquetas con tu marca?</li><li>¿Usás bolsas con cierre o solo común?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bolsa kraft + etiqueta</li><li>Producto granel + envase + sticker</li><li>Bolsa de papel + tarjeta</li><li>Packaging simple + opción más estética</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas de papel impresas</li><li>Bobinas de papel impresas</li><li>Cintas impresas</li><li>Etiquetas / stickers personalizados <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-libreria">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">📚</span>
+        <div class="rubro-hero-name">Librería / Fotocopiadora</div>
+        <div class="rubro-hero-tip">Estacionalidad fuerte en inicio de clases. Compra mixta el resto del año.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Bolsas camiseta</li><li>Bolsas de papel</li><li>Cinta adhesiva</li><li>Cajas</li><li>Sobres <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Bolsas para regalos</li><li>Stickers</li><li>Papel madera / kraft</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Packaging escolar de temporada</li><li>Bolsas chicas</li><li>Etiquetas</li><li>Cajas para kits</li><li>Cintas</li><li>Bolsitas para fechas especiales</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Te aprovisionás para el inicio de clases?</li><li>¿Vendés regalos / artículos para fechas especiales?</li><li>¿Armás kits escolares?</li><li>¿Qué fecha fuerte tenés cerca?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Bolsa + sticker</li><li>Caja para kit escolar + cinta</li><li>Bolsas por cantidad para inicio de clases</li><li>Packaging para regalos escolares</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Bolsas de papel impresas</li><li>Bolsas riñón impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="rubro-detail" id="rubro-mayorista">
+      <div class="rubro-back" onclick="hideRubro()">
+        <span>← Volver a rubros</span>
+      </div>
+      <div class="rubro-hero">
+        <span class="rubro-hero-icon">🏭</span>
+        <div class="rubro-hero-name">Mayorista / Reventa</div>
+        <div class="rubro-hero-tip">Volumen muy alto. Busca rotación rápida, precio por bulto y novedades antes de que se agoten.</div>
+      </div>
+      <div style="padding: 12px 14px">
+        
+
+        <div class="tag-section">
+          <div class="tag-label">✅ Sí o sí ofrecer</div>
+          <ul class="list-clean"><li>Productos de alta rotación</li><li>Bolsas camiseta</li><li>Vasos</li><li>Servilletas</li><li>Bandejas</li><li>Sorbetes</li><li>Bolsas BD</li><li>Cajas</li><li>Packaging de temporada</li><li>Bultos cerrados</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">⚠️ No olvidar (suelen pasarse)</div>
+          <ul class="list-clean"><li>Novedades</li><li>Productos diferenciales</li><li>Packs por temporada</li><li>Productos que no consiguen fácil</li><li>Combos armados para revender</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">❓ Preguntas inteligentes</div>
+          <ul class="list-q"><li>¿Qué se te mueve más rápido?</li><li>¿Qué te están pidiendo que no encontrás fácil?</li><li>¿Te interesa stock anticipado por temporada?</li><li>¿Querés ver novedades antes que el resto?</li></ul>
+        </div>
+
+        <div class="upsell-box">
+          <div class="tip-label">📈 Ideas de upselling</div>
+          <ul class="list-arrow"><li>Precio por bulto</li><li>Descuento por volumen</li><li>Compra anticipada de temporada</li><li>Combo de alta rotación</li><li>Productos de temporada antes de que se agoten</li></ul>
+        </div>
+
+        <div class="tag-section">
+          <div class="tag-label">🖨️ Impresos posibles</div>
+          <ul class="list-clean"><li>Consultar según volumen <span class="revisar-pill">revisar si Emmapel lo trabaja</span></li><li>Bolsas impresas</li><li>Servilletas impresas</li><li>Cajas impresas</li><li>Cintas impresas</li></ul>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ════════ WHATSAPP ════════ -->
+    <div class="page" id="page-whatsapp">
+      <div class="section-title">💬 WhatsApp</div>
+      <div class="section-sub">Respuestas listas para copiar y mandar. Tocá "Copiar" y reemplazá lo que está entre corchetes.</div>
+      <div class="wpp-cat"><div class="wpp-cat-title">💰 Precios</div><div class="wpp-msg"><div class="wpp-msg-title">Precio simple</div><div class="wpp-msg-text">Hola [Nombre], te paso el precio de [producto]:
+
+• Por unidad: $[precio]
+• Por pack/caja: $[precio]
+
+Si querés te paso también el precio por bulto / mayorista, así ves qué te conviene más.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Precio por cantidad</div><div class="wpp-msg-text">Hola [Nombre], te paso las opciones de [producto] según la cantidad:
+
+• Pack chico: $[precio]
+• Caja: $[precio]
+• Bulto: $[precio]
+
+Mientras más cantidad, mejor te queda el precio unitario. ¿Qué volumen estabas necesitando?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Precio mayorista</div><div class="wpp-msg-text">Hola [Nombre], te paso el precio mayorista de [producto]:
+
+• [Cantidad mínima]: $[precio]
+
+Es el precio por bulto cerrado. Si llevás más de un bulto te puedo ver una mejora.
+¿Cuánto estabas necesitando?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Falta definir medida / cantidad</div><div class="wpp-msg-text">Hola [Nombre], para pasarte el precio justo de [producto] necesito que me confirmes:
+
+• Medida
+• Cantidad aproximada
+• Si lo querés por unidad o por bulto
+
+Con eso te armo dos opciones para que compares.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Varias opciones disponibles</div><div class="wpp-msg-text">Hola [Nombre], de [producto] tenemos varias opciones:
+
+• [Opción 1]: $[precio]
+• [Opción 2]: $[precio]
+• [Opción 3]: $[precio]
+
+Cambia la calidad/medida según el uso. ¿Para qué lo necesitás? Así te recomiendo cuál te conviene.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div><div class="wpp-cat"><div class="wpp-cat-title">💬 Objeciones</div><div class="wpp-msg"><div class="wpp-msg-title">"Está caro"</div><div class="wpp-msg-text">Entiendo, [Nombre].
+¿Me contás con qué producto lo estás comparando? A veces cambia la medida, el espesor, la cantidad por paquete o la calidad. Así vemos bien si es lo mismo o si hay una opción que te convenga más.
+
+¿Preferís una opción más económica o una que rinda más?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"Ya tengo proveedor"</div><div class="wpp-msg-text">Perfecto, está bueno tener proveedor de confianza.
+No hace falta que cambies todo. Capaz podés tenernos como segunda opción para cuando te falte stock, o para cotizar productos puntuales y comparar.
+
+¿Qué producto es el que más comprás o el que más se te termina?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"Después veo"</div><div class="wpp-msg-text">Dale, sin problema.
+Para ayudarte mejor, ¿querés que te deje anotadas dos opciones así después comparás tranquilo?
+
+¿Cuándo querés que te vuelva a consultar?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"No necesito ahora"</div><div class="wpp-msg-text">Perfecto, [Nombre].
+¿Querés que te avise cuando entren productos nuevos o haya alguna oferta?
+
+Así no perdés tiempo y solo te escribo cuando hay algo que te puede interesar.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"Compré hace poco"</div><div class="wpp-msg-text">Genial. ¿Cuánto te suele durar?
+Así te escribo justo cuando te vas a estar quedando sin stock y no te pasa nunca de quedarte sin.
+
+¿Te parece?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"Me queda lejos"</div><div class="wpp-msg-text">No hay problema, hacemos envíos a [zona / todo el país].
+¿Querés que te pase costo y tiempos de envío para tu zona?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"Te aviso"</div><div class="wpp-msg-text">Dale, [Nombre].
+Por las dudas, ¿te escribo yo en [unos días / la semana que viene] para no perder contacto? Si necesitás antes me decís.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"Lo consigo más barato"</div><div class="wpp-msg-text">Puede ser, depende mucho de la calidad y la cantidad.
+¿Me contás dónde lo conseguís y a qué precio? Así lo comparo bien y te digo si es lo mismo o no.
+
+A veces es el mismo producto, a veces no. Quiero ser honesto.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"No tengo plata ahora"</div><div class="wpp-msg-text">Lo entiendo, [Nombre].
+¿Querés que te deje el precio anotado y te escribo más adelante? Así no perdés la cotización.
+
+O si necesitás algo puntual chico, podemos ver una compra mínima.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">"No sé qué medida necesito"</div><div class="wpp-msg-text">No hay drama, [Nombre].
+¿Para qué lo vas a usar? Con eso te recomiendo la medida que mejor te queda. Así no comprás de más ni te queda chico.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div><div class="wpp-cat"><div class="wpp-cat-title">📦 Pedidos</div><div class="wpp-msg"><div class="wpp-msg-title">Confirmar pedido recibido</div><div class="wpp-msg-text">Perfecto [Nombre], te confirmo el pedido:
+
+• [Producto 1] — [cantidad]
+• [Producto 2] — [cantidad]
+• [Producto 3] — [cantidad]
+
+Total aproximado: $[monto]
+
+Te aviso apenas esté preparado / coordinamos entrega.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Pedir datos que faltan</div><div class="wpp-msg-text">Hola [Nombre], para terminar de armar el pedido necesito:
+
+• Dirección de entrega
+• Horario que te queda mejor
+• Forma de pago
+
+Apenas me confirmes lo dejo cerrado.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Confirmar entrega / retiro</div><div class="wpp-msg-text">Hola [Nombre], tu pedido está listo.
+
+¿Lo pasás a retirar o lo enviamos?
+Si es envío, confirmame dirección y horario para coordinar.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Avisar producto sin stock</div><div class="wpp-msg-text">Hola [Nombre], lamentablemente [producto] está sin stock por ahora.
+
+Tengo dos opciones:
+• Esperar que reponga (te aviso apenas llegue)
+• Reemplazarlo por [alternativa similar]
+
+¿Cuál te conviene?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Ofrecer reemplazo</div><div class="wpp-msg-text">[Nombre], en lugar de [producto] te puedo ofrecer:
+
+• [Alternativa 1]: $[precio]
+• [Alternativa 2]: $[precio]
+
+Cumplen la misma función, te paso fotos / detalles si querés.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Pasar total del pedido</div><div class="wpp-msg-text">Listo [Nombre], te paso el total:
+
+Productos:
+• [Item 1] — $[monto]
+• [Item 2] — $[monto]
+• [Item 3] — $[monto]
+
+💰 Total: $[total]
+
+¿Confirmamos así avanzo con la preparación?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Recordar pago</div><div class="wpp-msg-text">Hola [Nombre], te recuerdo que quedaba pendiente el pago de tu pedido del [fecha].
+
+Monto: $[monto]
+
+¿Te paso datos para transferencia o coordinamos otra forma?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Pedido listo para retirar</div><div class="wpp-msg-text">[Nombre], tu pedido está listo ✅
+
+Total: $[monto]
+
+Lo podés pasar a retirar por [dirección] de [horario].
+Cualquier cosa me avisás cuando venís.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div><div class="wpp-cat"><div class="wpp-cat-title">👋 Cliente nuevo</div><div class="wpp-msg"><div class="wpp-msg-title">Presentación del vendedor</div><div class="wpp-msg-text">Hola [Nombre], soy [vendedor] de Emmapel.
+Estamos visitando comercios de la zona para ofrecer descartables, packaging, bolsas, cajas e impresos.
+
+Trabajamos productos por unidad, por cantidad y también precios mayoristas.
+Si querés, te puedo asesorar según lo que uses en tu negocio.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Cliente visitado por primera vez</div><div class="wpp-msg-text">Hola [Nombre], soy [vendedor] de Emmapel. Te dejo mi contacto por si necesitás algo de lo que vimos hoy.
+
+Quedo a la orden para cotizar, pasarte precios o asesorarte. Trabajamos sin mínimo de compra y con envíos.
+
+Cualquier consulta me escribís por acá.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Cliente que pidió catálogo</div><div class="wpp-msg-text">Hola [Nombre], como te comenté, te paso info de los productos que trabajamos en Emmapel:
+
+📦 Packaging: cajas, bolsas, blondas, bandejas
+🥤 Descartables: vasos, servilletas, sorbetes, cubiertos
+🛍️ Bolsas: camiseta, BD, papel, friselina
+🖨️ Impresos personalizados con tu marca
+
+También podés ver nuestra tienda online de packaging en emmapel.com.ar
+
+Decime qué te interesa y te paso precios.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Cliente referido</div><div class="wpp-msg-text">Hola [Nombre], soy [vendedor] de Emmapel. [Persona] me pasó tu contacto y me dijo que podías estar necesitando [productos].
+
+Trabajamos con sin mínimo de compra, distintas medidas y también impresos personalizados.
+
+¿Querés que te pase opciones o te visite para mostrarte?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Interesado pero sin compra todavía</div><div class="wpp-msg-text">Hola [Nombre], paso a saludar.
+Quedaste interesado en [producto] cuando nos vimos.
+
+¿Querés que te deje reservado, te pase precio actualizado o coordinamos para verlo de cerca?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div><div class="wpp-cat"><div class="wpp-cat-title">🔄 Seguimientos</div><div class="wpp-msg"><div class="wpp-msg-title">Después de visita</div><div class="wpp-msg-text">Hola [Nombre], te escribo después de la visita del [día].
+
+Quedamos en que iba a pasarte:
+• [Producto / cotización]
+
+Acá te dejo lo que vimos. ¿Lo charlamos para ir cerrando?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Seguimiento de presupuesto</div><div class="wpp-msg-text">Hola [Nombre], paso a saludar.
+Te había pasado el presupuesto de [producto] hace [días/semanas].
+
+¿Pudiste verlo? Si necesitás ajustar algo, cambiar cantidades o ver otra opción, decime sin problema.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Cliente que dijo "lo veo"</div><div class="wpp-msg-text">Hola [Nombre], soy [vendedor] de Emmapel.
+Te escribo por lo que vimos el otro día de [producto].
+
+¿Querés que te lo deje reservado o preferís que te pase otra opción?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Cliente regular — repetir compra</div><div class="wpp-msg-text">Hola [Nombre], paso a consultar.
+
+¿Querés que te prepare lo mismo de la vez pasada o vamos sumando algo nuevo?
+
+Si estás necesitando algo distinto contame, así te lo cotizo.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Reactivación — hace tiempo no compra</div><div class="wpp-msg-text">Hola [Nombre], paso a saludar. Hace un tiempo que no nos hablamos.
+
+¿Sigue todo bien con tu negocio? Si necesitás reponer algo o querés ver novedades, me avisás.
+
+¡Acá ando para lo que necesites!</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Aviso de temporada</div><div class="wpp-msg-text">Hola [Nombre], te escribo porque ya estamos con productos de [temporada].
+
+Te puedo armar combo para ofrecer en tu negocio:
+• [Producto 1]
+• [Producto 2]
+• [Producto 3]
+
+¿Querés que te pase precios y opciones?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div><div class="wpp-cat"><div class="wpp-cat-title">😤 Quejas y reclamos</div><div class="wpp-msg"><div class="wpp-msg-title">Regla principal</div><div class="wpp-msg-text">⚠️ REGLA: No discutas por WhatsApp.
+Primero contené al cliente, pedile datos y derivá si hace falta.
+No prometas soluciones sin chequear primero.</div></div><div class="wpp-msg"><div class="wpp-msg-title">Reclamo por producto</div><div class="wpp-msg-text">Hola [Nombre], lamento lo que pasó.
+Para poder revisarlo bien, ¿me pasás foto del producto y número de pedido/remito o fecha de compra?
+
+Lo vemos y buscamos resolverlo lo antes posible.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Pedido incompleto</div><div class="wpp-msg-text">[Nombre], disculpá por eso.
+¿Me confirmás qué producto te faltó y la cantidad?
+
+Lo chequeo con el equipo y te confirmo cómo lo resolvemos.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Demora en la entrega</div><div class="wpp-msg-text">Hola [Nombre], lamento la demora.
+
+Dejame que chequee el estado del pedido y te confirmo en un rato cuándo te llega.
+Disculpas por el inconveniente.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Producto equivocado</div><div class="wpp-msg-text">[Nombre], pido disculpas.
+¿Me podés pasar foto de lo que recibiste vs lo que pediste? Así lo revisamos rápido y vemos cómo hacemos el cambio.
+
+Lo solucionamos.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Cliente molesto</div><div class="wpp-msg-text">[Nombre], entiendo el malestar y tenés razón en plantearlo.
+
+Dejame que lo chequee bien y te confirmo cómo lo resolvemos. La idea es que quedes bien con nosotros, no perder un cliente.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div><div class="wpp-cat"><div class="wpp-cat-title">🛒 Tienda online</div><div class="wpp-msg"><div class="wpp-msg-title">Aclaración importante</div><div class="wpp-msg-text">⚠️ La tienda online es SOLO de packaging.
+No presentarla como si estuvieran todos los productos.
+Link: emmapel.com.ar</div></div><div class="wpp-msg"><div class="wpp-msg-title">Pasar link tienda</div><div class="wpp-msg-text">También podés ver nuestra tienda online de packaging en emmapel.com.ar 📦
+
+Ahí vas a encontrar cajas, bolsas y productos de packaging.
+Para descartables, impresos o productos más específicos, escribime y te asesoro por acá.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Cliente pregunta por el catálogo</div><div class="wpp-msg-text">En la tienda online tenemos el catálogo de packaging: emmapel.com.ar
+
+Para descartables (vasos, servilletas, sorbetes) y para impresos personalizados, te lo paso yo por acá según lo que necesites.
+
+¿Qué estás buscando?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div><div class="wpp-cat"><div class="wpp-cat-title">🖨️ Impresos</div><div class="wpp-msg"><div class="wpp-msg-title">Presentar impresos</div><div class="wpp-msg-text">También trabajamos productos impresos personalizados con logo o diseño.
+
+Podemos cotizar:
+• Camisetas
+• Bolsas de polipropileno
+• Bolsas de papel delivery / panadería
+• Bolsas boutique de papel
+• Bolsas riñón de plástico
+• Bolsas friselina
+• Servilletas
+• Bobinas de papel
+• Cintas
+• Cajas
+
+El mínimo depende del producto. Para cotizarte bien necesito saber producto, cantidad aproximada, medida, color de impresión y si ya tenés logo o archivo.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Pedir datos para cotizar</div><div class="wpp-msg-text">Para cotizar tu impreso necesito que me pases:
+
+1️⃣ Qué producto querés imprimir
+2️⃣ Cantidad aproximada
+3️⃣ Medida
+4️⃣ Color del producto
+5️⃣ Cuántos colores tiene el logo / diseño
+6️⃣ Si ya tenés logo o archivo
+7️⃣ Para cuándo lo necesitás
+8️⃣ Uso (delivery, regalo, panadería, evento, etc.)
+
+Con eso te armo la cotización completa.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Mínimos según producto</div><div class="wpp-msg-text">Sobre los mínimos: depende del producto.
+
+• Algunos arrancan con cantidades chicas
+• Otros necesitan más volumen para que rinda el precio
+
+Pasame qué producto y qué cantidad pensabas, así te confirmo si es viable o te recomiendo otra cantidad.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">Pedir logo / archivo</div><div class="wpp-msg-text">Para avanzar con el impreso necesito el archivo de tu logo.
+
+Idealmente en .ai, .pdf, .eps o .png en buena calidad. Si solo lo tenés en jpg o de redes sociales, mandámelo igual y vemos si sirve. Si hace falta mejorar el archivo te aviso antes.</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div><div class="wpp-msg"><div class="wpp-msg-title">No prometer fechas</div><div class="wpp-msg-text">Te averiguo disponibilidad y tiempos reales antes de confirmarte, así no te prometo algo que después no llegamos a cumplir.
+
+¿Para qué fecha lo necesitarías idealmente?</div><button class="wpp-copy-btn" onclick="copyMsg(this)">📋 Copiar mensaje</button></div></div>
+      <div style="height: 12px"></div>
+    </div>
+
+    <!-- ════════ IMPRESOS ════════ -->
+    <div class="page" id="page-impresos">
+      
+    <div class="section-title">🖨️ Impresos Personalizados</div>
+    <div class="section-sub">Productos con logo o diseño del cliente — bolsas, servilletas, cintas, cajas y más.</div>
+
+    <div style="padding: 0 12px">
+      <div class="info-card">
+        <div class="info-card-title">📌 Qué son los impresos</div>
+        <div class="info-card-text">Productos personalizados con logo, diseño o marca del cliente. Sirven para diferenciarse, profesionalizar la imagen y fidelizar.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-icon">📦</div>
+          <div class="card-title">Qué productos hacemos impresos</div>
+          <div class="card-arrow">▶</div>
+        </div>
+        <div class="card-body">
+          <ul class="list-clean"><li>Camisetas</li><li>Bolsas de polipropileno</li><li>Bolsas de papel delivery</li><li>Bolsas de papel para panadería</li><li>Bolsas boutique de papel</li><li>Bolsas riñón de plástico</li><li>Bolsas friselina</li><li>Servilletas</li><li>Bobinas de papel</li><li>Cintas</li><li>Cajas</li></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-icon">⚠️</div>
+          <div class="card-title">Lo que tenés que saber</div>
+          <div class="card-arrow">▶</div>
+        </div>
+        <div class="card-body">
+          <ul class="list-clean"><li>Se cotiza según producto, cantidad, tamaño, material e impresión.</li><li>El mínimo depende del producto.</li><li>No todos los productos tienen el mismo mínimo.</li><li>No todos tienen el mismo tiempo de entrega.</li><li>Siempre hay que pedir datos antes de prometer precio.</li><li>No prometer fecha exacta sin consultar.</li><li>No prometer que "se puede hacer" sin revisar archivo, cantidad y producto.</li><li>Si el cliente no tiene logo en buena calidad, pedir lo que tenga y consultar.</li></ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-icon">📝</div>
+          <div class="card-title">Datos a pedir para cotizar</div>
+          <div class="card-arrow">▶</div>
+        </div>
+        <div class="card-body">
+          <ol class="list-num"><li>Producto que quiere imprimir.</li><li>Cantidad aproximada.</li><li>Medida.</li><li>Color del producto.</li><li>Cantidad de colores del logo / diseño.</li><li>Si ya tiene logo o archivo.</li><li>Fecha para cuándo lo necesita.</li><li>Uso del producto (delivery, regalo, panadería, indumentaria, evento, etc.).</li><li>Si busca algo económico o más premium.</li></ol>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-icon">💬</div>
+          <div class="card-title">Frase para ofrecer en visita</div>
+          <div class="card-arrow">▶</div>
+        </div>
+        <div class="card-body">
+          <div class="quote-box">"Además de productos lisos, también trabajamos impresos personalizados. Podemos cotizar bolsas, servilletas, cintas, cajas o bobinas con el logo de tu negocio.<br><br>El mínimo depende del producto, pero si querés te puedo pedir los datos y averiguarte una opción."</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header" onclick="toggleCard(this)">
+          <div class="card-icon">🛡️</div>
+          <div class="card-title">Objeciones típicas y respuestas</div>
+          <div class="card-arrow">▶</div>
+        </div>
+        <div class="card-body"><div class="objection-box"><div class="obj-question">"Seguro es caro"</div><div class="obj-answer">Depende mucho del producto y la cantidad. A veces conviene más de lo que parece, sobre todo si lo usás todos los días. Te puedo cotizar una opción base y una más completa para comparar.</div></div><div class="objection-box"><div class="obj-question">"No sé qué cantidad hacer"</div><div class="obj-answer">Podemos calcularlo según tu consumo mensual. La idea es que no hagas de menos, pero tampoco que te claves con demasiado stock.</div></div><div class="objection-box"><div class="obj-question">"No tengo logo en buena calidad"</div><div class="obj-answer">No hay problema. Pasanos lo que tengas y vemos si sirve para cotizar. Si hace falta mejorar el archivo, te avisamos antes.</div></div><div class="objection-box"><div class="obj-question">"Lo necesito rápido"</div><div class="obj-answer">Te averiguo disponibilidad y tiempos reales antes de confirmarte, así no te prometo algo que después no llegamos a cumplir.</div></div></div>
+      </div>
+    </div>
+    
+      <div style="height: 12px"></div>
+    </div>
+
+    <!-- ════════ CAPACITACIÓN ════════ -->
+    <div class="page" id="page-capacitacion">
+      <div class="section-title">📚 Capacitación</div>
+      <div class="section-sub">Tocá cada tema para abrirlo. Empezá por el 1 si recién arrancás.</div>
+      <div style="padding: 0 12px">
+        <div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🚪</div><div class="card-title">1. Cómo entrar a un negocio</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="cap-block"><div class="cap-block-label">Frases para usar al entrar</div><div class="quote-box">"Hola, soy [nombre] de Emmapel. Estamos visitando comercios de la zona para mostrar opciones de descartables, packaging, bolsas e impresos. ¿Trabajan con este tipo de productos?"</div><div class="quote-box">"Hola, soy [nombre] de Emmapel. Quería mostrarte algunas opciones que suelen usar negocios como el tuyo para delivery, mostrador, packaging e impresos."</div></div><div class="tip-box"><div class="tip-label">Tip clave</div><p>Saludá con seguridad y no arranques con un "perdón que te moleste". Sos un vendedor profesional ofreciendo soluciones, no estás interrumpiendo.</p></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🔍</div><div class="card-title">2. Cómo detectar necesidades</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="cap-block"><div class="cap-block-label">Preguntas clave</div><ul class="list-q"><li>¿Qué producto usás todos los días?</li><li>¿Qué se te termina más rápido?</li><li>¿Comprás por semana, quincena o mes?</li><li>¿Tenés proveedor fijo?</li><li>¿Qué producto te cuesta conseguir?</li><li>¿Qué packaging usás para entregar?</li><li>¿Tenés algo personalizado con tu logo?</li><li>¿Vendés más por local, delivery o redes?</li><li>¿Tenés alguna fecha fuerte cerca?</li></ul></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🏪</div><div class="card-title">3. Cómo vender según rubro</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="info-block info-block-red"><div class="info-block-label">El vendedor NO debe decir</div><div class="info-block-text">"Tenemos de todo."</div></div><div class="info-block info-block-green"><div class="info-block-label">Tiene que decir</div><div class="info-block-text">"Por tu rubro, lo que más suelen llevar es esto, esto y esto."</div></div><div class="cap-block"><div class="cap-block-label">Ejemplo panadería</div><div class="quote-box">"En panaderías normalmente se mueve mucho bolsa de papel, blonda, caja con visor, bandeja, pirotines y packaging de temporada."</div></div><div class="cap-block"><div class="cap-block-label">Ejemplo pizzería</div><div class="quote-box">"En pizzerías suele salir mucho caja de pizza, servilleta, bolsa camiseta, vasos, sorbetes y bolsas de pre-pizza si también venden prepizzas."</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🔗</div><div class="card-title">4. Cómo vender combos</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="rule-mini"><div class="rule-mini-label">Regla de oro</div><div class="rule-mini-text">Nunca ofrecer un producto solo si existe un complemento lógico.</div></div><div class="cap-block"><div class="cap-block-label">Combos típicos</div><div class="quote-box">"Vaso + tapa + sorbete + servilleta"</div><div class="quote-box">"Caja de torta + blonda + sticker + bolsa"</div><div class="quote-box">"Caja de pizza + servilleta + bolsa camiseta"</div><div class="quote-box">"Bolsa boutique + papel seda + sticker"</div><div class="quote-box">"Bandeja + film + guantes"</div><div class="quote-box">"Bolsa delivery impresa + servilleta impresa"</div><div class="quote-box">"Pote + tapa + etiqueta"</div><div class="quote-box">"Caja de envío + papel seda + cinta"</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">💬</div><div class="card-title">5. Cómo manejar objeciones</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="obj-full"><div class="obj-full-title">"Ya tengo proveedor"</div><div class="obj-row"><span class="obj-row-tag">🧠 Qué significa</span><span class="obj-row-text">No quiere arriesgarse o no ve motivo para cambiar.</span></div><div class="obj-row obj-row-red"><span class="obj-row-tag">❌ Qué NO decir</span><span class="obj-row-text">"Bueno, cualquier cosa avisame."</span></div><div class="obj-row obj-row-green"><span class="obj-row-tag">✅ Qué responder</span><span class="obj-row-text">Perfecto, está bueno tener proveedor. No hace falta que cambies todo. Capaz podemos cotizarte algunos productos puntuales para que compares o para tener una segunda opción cuando te falte stock.</span></div><div class="obj-row obj-row-blue"><span class="obj-row-tag">🎯 Cierre</span><span class="obj-row-text">¿Qué producto es el que más comprás o el que más se te termina?</span></div></div><div class="obj-full"><div class="obj-full-title">"Está caro"</div><div class="obj-row"><span class="obj-row-tag">🧠 Qué significa</span><span class="obj-row-text">Está comparando con otro producto, pero no siempre compara misma calidad, medida o cantidad.</span></div><div class="obj-row obj-row-red"><span class="obj-row-tag">❌ Qué NO decir</span><span class="obj-row-text">"Y bueno, ese es el precio."</span></div><div class="obj-row obj-row-green"><span class="obj-row-tag">✅ Qué responder</span><span class="obj-row-text">Entiendo. ¿Me contás con qué lo estás comparando? A veces cambia el espesor, la medida, la cantidad por paquete o la calidad. Si querés, vemos una opción más económica y otra de mejor calidad.</span></div><div class="obj-row obj-row-blue"><span class="obj-row-tag">🎯 Cierre</span><span class="obj-row-text">¿Preferís que te pase una opción económica o una que rinda más?</span></div></div><div class="obj-full"><div class="obj-full-title">"Después veo"</div><div class="obj-row"><span class="obj-row-tag">🧠 Qué significa</span><span class="obj-row-text">No está listo para decidir o no encontró urgencia.</span></div><div class="obj-row obj-row-red"><span class="obj-row-tag">❌ Qué NO decir</span><span class="obj-row-text">"Dale, avisame."</span></div><div class="obj-row obj-row-green"><span class="obj-row-tag">✅ Qué responder</span><span class="obj-row-text">Dale, sin problema. Para ayudarte mejor, ¿querés que te deje anotadas dos opciones así después comparás tranquilo?</span></div><div class="obj-row obj-row-blue"><span class="obj-row-tag">🎯 Cierre</span><span class="obj-row-text">¿Cuándo querés que te vuelva a consultar?</span></div></div><div class="obj-full"><div class="obj-full-title">"No necesito ahora"</div><div class="obj-row"><span class="obj-row-tag">🧠 Qué significa</span><span class="obj-row-text">Tiene stock o no ve la urgencia. Pero puede volver a necesitar.</span></div><div class="obj-row obj-row-red"><span class="obj-row-tag">❌ Qué NO decir</span><span class="obj-row-text">"Bueno, dale."</span></div><div class="obj-row obj-row-green"><span class="obj-row-tag">✅ Qué responder</span><span class="obj-row-text">Sin problema. ¿Querés que te avise cuando entren novedades o productos de temporada? Así no perdés tiempo, solo te escribo cuando hay algo que te puede servir.</span></div><div class="obj-row obj-row-blue"><span class="obj-row-tag">🎯 Cierre</span><span class="obj-row-text">¿Cada cuánto solés reponer?</span></div></div><div class="obj-full"><div class="obj-full-title">"Lo consigo más barato"</div><div class="obj-row"><span class="obj-row-tag">🧠 Qué significa</span><span class="obj-row-text">Compara precio sin comparar producto. O no sabe la diferencia de calidad / medida.</span></div><div class="obj-row obj-row-red"><span class="obj-row-tag">❌ Qué NO decir</span><span class="obj-row-text">"Imposible, ese es el mejor precio."</span></div><div class="obj-row obj-row-green"><span class="obj-row-tag">✅ Qué responder</span><span class="obj-row-text">Puede ser, depende mucho de la calidad y la cantidad. ¿Dónde lo conseguís y a qué precio? Lo comparo bien y te digo si es lo mismo o no. A veces es el mismo producto, a veces no, quiero ser honesto.</span></div><div class="obj-row obj-row-blue"><span class="obj-row-tag">🎯 Cierre</span><span class="obj-row-text">¿Te paso una alternativa más económica para que compares en igualdad?</span></div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">📝</div><div class="card-title">6. Cómo levantar pedidos de clientes regulares</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="info-block info-block-red"><div class="info-block-label">Importante</div><div class="info-block-text">El vendedor no solo toma pedido. Detecta oportunidad.</div></div><div class="cap-block"><div class="cap-block-label">Preguntas para levantar mejor el pedido</div><ul class="list-q"><li>¿Querés repetir lo mismo de la vez pasada?</li><li>¿Te alcanzó bien la cantidad?</li><li>¿Hubo algo que te faltó?</li><li>¿Querés sumar algo antes del finde?</li><li>¿Tenés algún evento o fecha especial?</li><li>¿Querés que te cotice impreso con tu logo?</li><li>¿Querés ver algo nuevo que entró?</li><li>¿Te paso precio por más cantidad para que te rinda mejor?</li></ul></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">⭐</div><div class="card-title">7. Cómo vender productos de mayor valor</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="info-block info-block-red"><div class="info-block-label">No venderlo como</div><div class="info-block-text">"Es más caro."</div></div><div class="info-block info-block-green"><div class="info-block-label">Venderlo como</div><ul class="list-clean"><li>Mejor presentación</li><li>Más resistencia</li><li>Mejor experiencia para el cliente</li><li>Imagen más profesional</li><li>Posibilidad de cobrar mejor el producto</li><li>Diferenciación frente a otros negocios</li></ul></div><div class="cap-block"><div class="cap-block-label">Frases que funcionan</div><div class="quote-box">"Esto no es solo para entregar el producto. También hace que tu negocio se vea más profesional."</div><div class="quote-box">"Capaz el producto es el mismo, pero con un packaging mejor presentado, el cliente lo percibe distinto."</div><div class="quote-box">"Acá vas a poder cobrar un poco más porque la presentación lo justifica."</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🖨️</div><div class="card-title">8. Cómo ofrecer impresos</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="info-block info-block-red"><div class="info-block-label">A quién ofrecerle impresos</div><div class="info-block-text">A todo cliente que tenga local físico, marca propia o que entregue producto a un cliente final. Especialmente: gastronómicos con delivery, panaderías, regalerías, emprendedores, indumentaria, farmacias y eventos.</div></div><div class="cap-block"><div class="cap-block-label">Frase para abrir el tema</div><div class="quote-box">"¿Tenés algo personalizado con tu logo? Porque además de los productos lisos, también podemos cotizar bolsas, servilletas, cintas, cajas o bobinas impresas."</div></div><div class="tip-box"><div class="tip-label">Recordá</div><p>No prometas precio sin tener los datos. Mejor decir "te averiguo" que tirar un número equivocado.</p></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🎯</div><div class="card-title">9. Cómo cerrar una visita</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="rule-mini"><div class="rule-mini-label">Regla</div><div class="rule-mini-text">Nunca te vayas sin una acción concreta.</div></div><div class="cap-block"><div class="cap-block-label">Opciones de cierre</div><ul class="list-q"><li>¿Te cotizo esto?</li><li>¿Probamos con una cantidad chica?</li><li>¿Te paso precio por bulto?</li><li>¿Querés que lo dejemos reservado?</li><li>¿Cuándo vuelvo a pasar?</li><li>¿Querés que te mande opciones por WhatsApp?</li><li>¿Querés que te arme un combo básico para tu rubro?</li><li>¿Te parece si arrancamos con lo que más salida tiene?</li></ul></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">📋</div><div class="card-title">10. Registro y seguimiento</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="info-block info-block-red"><div class="info-block-label">Después de cada visita, registrar</div><div class="info-block-text">Resultado: Vendí / No compró / Reprogramar / No fui</div></div><div class="cap-block"><div class="cap-block-label">Datos a anotar</div><ul class="list-q"><li>Qué pidió</li><li>Qué le interesó</li><li>Qué objeción puso</li><li>Cuándo volver</li><li>Qué producto ofrecer la próxima vez</li><li>Si pidió cotización</li><li>Si interesa impresos</li><li>Si es cliente nuevo o regular</li></ul></div><div class="tip-box"><div class="tip-label">Por qué importa</div><p>El registro no es burocracia: es lo que hace que el seguimiento funcione y que un cliente que no compró hoy, compre la próxima vez. Sin registro, te olvidás de la mitad de las oportunidades.</p></div></div></div>
+      </div>
+      <div style="height: 12px"></div>
+    </div>
+
+    <!-- ════════ TEMPORADA ════════ -->
+    <div class="page" id="page-temporada">
+      <div class="section-title">📅 Temporadas y fechas especiales</div>
+      <div class="section-sub">Qué ofrecer y cuándo arrancar a vender cada temporada.</div>
+      <div style="padding: 0 12px">
+        <div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">☀️</div><div class="card-title">Verano</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Diciembre a marzo</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Empezar a ofrecer desde noviembre</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Heladerías, cafeterías, kioscos, eventos, food trucks</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Vasos polipapel, sorbetes, potes de helado, tapas, cucharitas, bolsas para take away, servilletas</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Pote helado + cuchara + bolsa | Vaso + tapa + sorbete</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Se viene fuerte el verano — ¿tenés stock de vasos, sorbetes y potes?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Vasos impresos (si trabaja), servilletas impresas, bolsas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🎒</div><div class="card-title">Inicio de clases</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Febrero - marzo</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Visitar librerías desde mediados de enero</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Librerías, fotocopiadoras, kioscos cerca de escuelas</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Bolsas chicas, cajas para kits escolares, sobres, papel kraft, bolsas de papel</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Kit escolar: caja + bolsa + cinta + sticker</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Se viene la temporada fuerte — ¿armaste el stock para inicio de clases?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Bolsas de papel impresas, bolsas riñón impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🥚</div><div class="card-title">Pascuas</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Marzo - abril</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Ofrecer desde fines de febrero</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Panaderías, confiterías, chocolaterías, regalerías, supermercados</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Cajas para huevos, blondas, cintas, papel seda, celofán, packaging temático</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Caja temática + cinta + papel seda + sticker</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Ya empezamos con productos de Pascuas — ¿te paso opciones?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Cajas impresas, cintas impresas, bolsas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">💐</div><div class="card-title">Día de la Madre</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Tercer domingo de octubre (Argentina)</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Ofrecer desde fines de septiembre</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Regalerías, florerías, perfumerías, indumentaria, panaderías</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Bolsas boutique, cajas de regalo, papel seda, cintas, moños, tags, packaging premium</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Bolsa boutique + papel seda + cinta + tarjeta</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Se viene Día de la Madre — ¿tenés packaging para regalos?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Bolsas boutique impresas, cintas impresas, cajas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">👔</div><div class="card-title">Día del Padre</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Tercer domingo de junio (Argentina)</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Ofrecer desde fines de mayo</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Regalerías, indumentaria, perfumerías, librerías, panaderías</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Bolsas boutique, cajas, papel seda, cintas, tags, packaging para regalos</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Bolsa + caja + cinta + sticker</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Día del Padre cerca — ¿armamos algo para tus clientes que regalan?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Cajas impresas, bolsas impresas, cintas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">💝</div><div class="card-title">San Valentín</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">14 de febrero</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Ofrecer desde fines de enero</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Regalerías, florerías, panaderías, confiterías, indumentaria</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Cajas temáticas, cintas, papel seda rojo/rosa, moños, packaging premium, bolsitas</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Caja + cinta + papel seda + tag</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Ya tenemos cosas de San Valentín — ¿te muestro?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Cajas impresas, cintas impresas, bolsitas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🌸</div><div class="card-title">Primavera</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Septiembre</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Ofrecer desde mediados de agosto</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Florerías, regalerías, cafeterías, panaderías, eventos</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Packaging de colores claros, bolsas, cintas, papel seda, decoración temática</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Bolsa + cinta + papel seda + flor</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Arranca primavera — ¿renovás algo para fechas?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Bolsas impresas, cintas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🎄</div><div class="card-title">Navidad</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Diciembre</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Ofrecer desde octubre / noviembre</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">TODOS — especialmente panaderías, regalerías, supermercados, cotillón, eventos</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Packaging navideño, cajas para pan dulce, moldes, cintas, bolsas, papel seda, decoración</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Caja pan dulce + faja + bolsa | Bolsa navideña + cinta + sticker</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Se viene Navidad — ¿tenés stock o armamos pedido grande?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Cajas impresas navideñas, bolsas impresas, cintas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🎊</div><div class="card-title">Año Nuevo</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">31 de diciembre</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Combinar con stock de Navidad</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Cotillón, eventos, supermercados, kioscos, restaurantes</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Globos, copas champagne, servilletas premium, manteles, decoración</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Copa + servilleta + globo + decoración</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"Quedó algo de stock de Año Nuevo — ¿armás algo para reventa?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Servilletas impresas, bolsas impresas</div></div></div></div><div class="card"><div class="card-header" onclick="toggleCard(this)"><div class="card-icon">🎈</div><div class="card-title">Temporada de eventos</div><div class="card-arrow">▶</div></div><div class="card-body"><div class="temp-row"><div class="temp-row-label">📅 Fecha</div><div class="temp-row-text">Todo el año, picos en primavera y fin de año</div></div><div class="temp-row"><div class="temp-row-label">⏰ Cuándo empezar</div><div class="temp-row-text">Tener stock siempre disponible</div></div><div class="temp-row"><div class="temp-row-label">🏪 Rubros a visitar</div><div class="temp-row-text">Cotillón, catering, eventos, salones, cumpleaños</div></div><div class="temp-row"><div class="temp-row-label">📦 Productos a ofrecer</div><div class="temp-row-text">Globos, vasos temáticos, platos, servilletas, manteles, decoración, piñatas</div></div><div class="temp-row"><div class="temp-row-label">🔗 Combos</div><div class="temp-row-text">Cumple temático completo: vaso + plato + servilleta + globo + decoración</div></div><div class="temp-row"><div class="temp-row-label">💬 Frase para ofrecer</div><div class="temp-row-text quote-mini">"¿Tenés evento próximo o cumpleaños cerca?"</div></div><div class="temp-row"><div class="temp-row-label">🖨️ Impresos relacionados</div><div class="temp-row-text">Bolsitas impresas, servilletas impresas, cajas impresas</div></div></div></div>
+      </div>
+      <div style="height: 12px"></div>
+    </div>
+
   </div>
 
-  <!-- MODAL DEPOSITAR -->
-  <div class="modal hidden" id="modal">
-    <div class="modal-content">
-      <h2 class="modal-title" id="modal-title"></h2>
-      <label class="modal-label">Monto a agregar ($)</label>
-      <input type="text" id="modal-amount" class="modal-input" placeholder="Ej: 150000" />
-      <button class="modal-button" id="modal-save">Agregar</button>
-    </div>
-  </div>
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchPage('inicio')" id="nav-inicio"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></button>
+    <button class="nav-btn" onclick="switchPage('rubros')" id="nav-rubros"><span class="nav-icon">🏪</span><span class="nav-label">Rubros</span></button>
+    <button class="nav-btn" onclick="switchPage('whatsapp')" id="nav-whatsapp"><span class="nav-icon">💬</span><span class="nav-label">WhatsApp</span></button>
+    <button class="nav-btn" onclick="switchPage('impresos')" id="nav-impresos"><span class="nav-icon">🖨️</span><span class="nav-label">Impresos</span></button>
+    <button class="nav-btn" onclick="switchPage('capacitacion')" id="nav-capacitacion"><span class="nav-icon">📚</span><span class="nav-label">Capacitar</span></button>
+    <button class="nav-btn" onclick="switchPage('temporada')" id="nav-temporada"><span class="nav-icon">📅</span><span class="nav-label">Temporada</span></button>
+  </nav>
 
-  <script>
-    // ════════════════════════════════════════════════════════════════
-    //  CONFIGURACIÓN
-    // ════════════════════════════════════════════════════════════════
-    const CURRENCIES = [
-      { key: "USD", flag: "🇺🇸", name: "Dólar", sym: "USD", default: 1420 },
-      { key: "EUR", flag: "🇪🇺", name: "Euro", sym: "EUR", default: 1560 },
-      { key: "BRL", flag: "🇧🇷", name: "Real", sym: "BRL", default: 265 },
-      { key: "PYG", flag: "🇵🇾", name: "Guaraní", sym: "PYG", default: 0.19 }
-    ];
+</div>
 
-    const DEFAULT_FUNDS = [
-      { id: 1, name: "Casita", emoji: "🏠", amount: 640000 },
-      { id: 2, name: "Auto", emoji: "🚗", amount: 0 },
-      { id: 3, name: "Viaje 2026", emoji: "✈️", amount: 1282645 },
-      { id: 4, name: "Emergencia", emoji: "🛡️", amount: 0 }
-    ];
+<div class="toast" id="toast"></div>
 
-    // ════════════════════════════════════════════════════════════════
-    //  ESTADO
-    // ════════════════════════════════════════════════════════════════
-    let funds = [];
-    let rates = {};
-    let conversorOpen = true;
-    let currentTab = "fondos";
+<script>
+function switchPage(name){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const navBtn = document.getElementById('nav-' + name);
+  if(navBtn) navBtn.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+  // hide rubro detail when switching
+  hideRubro();
+}
 
-    function loadData() {
-      const saved = localStorage.getItem("cami_funds");
-      funds = saved ? JSON.parse(saved) : DEFAULT_FUNDS;
-      CURRENCIES.forEach(c => {
-        const tc = localStorage.getItem(`tc_${c.key}`);
-        rates[c.key] = tc ? parseFloat(tc) : c.default;
-      });
-    }
+function showRubro(id){
+  document.getElementById('rubros-list').style.display = 'none';
+  document.querySelectorAll('.rubro-detail').forEach(d => d.classList.remove('active'));
+  const target = document.getElementById('rubro-' + id);
+  if(target) target.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+}
 
-    function saveData() {
-      localStorage.setItem("cami_funds", JSON.stringify(funds));
-      CURRENCIES.forEach(c => {
-        localStorage.setItem(`tc_${c.key}`, rates[c.key]);
-      });
-    }
+function hideRubro(){
+  document.getElementById('rubros-list').style.display = 'block';
+  document.querySelectorAll('.rubro-detail').forEach(d => d.classList.remove('active'));
+}
 
-    // ════════════════════════════════════════════════════════════════
-    //  RENDER
-    // ════════════════════════════════════════════════════════════════
-    function render() {
-      renderFunds();
-      renderConversor();
-      updateTotal();
-    }
+function toggleCard(header){
+  const arrow = header.querySelector('.card-arrow');
+  const body = header.nextElementSibling;
+  arrow.classList.toggle('open');
+  body.classList.toggle('open');
+}
 
-    function updateTotal() {
-      const total = funds.reduce((s, f) => s + f.amount, 0);
-      document.getElementById("total-amount").textContent = "$" + Math.round(total).toLocaleString("es-AR");
-    }
+function copyMsg(btn){
+  const text = btn.previousElementSibling.textContent;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  toast('✅ Mensaje copiado');
+}
 
-    function renderFunds() {
-      const grid = document.getElementById("funds-grid");
-      grid.innerHTML = funds.map(f => `
-        <div class="fund-card">
-          <div class="fund-header">
-            <div class="fund-title">
-              <span class="fund-emoji">${f.emoji}</span>
-              <div class="fund-name">${f.name}</div>
-            </div>
-          </div>
-          <div class="fund-amount">${"$" + Math.round(f.amount).toLocaleString("es-AR")}</div>
-          <div class="fund-usd">≈ USD ${Math.round(f.amount / rates.USD).toLocaleString("es-AR")}</div>
-          <div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div>
-          <button class="deposit-btn" onclick="openModal(${f.id}, '${f.name}', '${f.emoji}')">+ Depositar</button>
-        </div>
-      `).join("");
-    }
+function toast(msg, ms = 2200){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), ms);
+}
+</script>
 
-    function renderConversor() {
-      const grid = document.getElementById("conversor-grid");
-      grid.innerHTML = CURRENCIES.map(c => {
-        const tc = rates[c.key];
-        return `
-          <div class="currency-card">
-            <div class="currency-header">
-              <div class="currency-name"><span>${c.flag}</span><span>${c.name}</span></div>
-              <div class="currency-tc-input">
-                <span>$</span>
-                <input type="number" id="tc-${c.key}" value="${tc}" onchange="updateTC('${c.key}')" step="${c.key === 'PYG' ? '0.01' : '1'}" />
-                <span>/${c.sym}</span>
-              </div>
-            </div>
-            <input type="text" class="currency-input" placeholder="Importe..." oninput="updateConversor('${c.key}')" id="input-${c.key}" />
-            <div class="currency-result" id="result-${c.key}"><div class="currency-empty">Ingresá un importe</div></div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function updateTC(key) {
-      const tcInput = document.getElementById(`tc-${key}`);
-      const newTC = parseFloat(tcInput.value) || rates[key];
-      rates[key] = newTC;
-      saveData();
-      updateConversor(key);
-    }
-
-    function updateConversor(key) {
-      const input = document.getElementById(`input-${key}`);
-      const result = document.getElementById(`result-${key}`);
-      const amount = parseFloat(input.value.replace(/\./g, "").replace(",", ".")) || 0;
-      if (amount > 0) {
-        const pesos = amount * rates[key];
-        result.innerHTML = `
-          <div class="currency-result-amount">$${Math.round(pesos).toLocaleString("es-AR")}</div>
-          <div class="currency-result-desc">${amount.toLocaleString("es-AR")} × $${rates[key].toFixed(rates[key] < 1 ? 4 : 0)}</div>
-        `;
-      } else {
-        result.innerHTML = `<div class="currency-empty">Ingresá un importe</div>`;
-      }
-    }
-
-    // ════════════════════════════════════════════════════════════════
-    //  TABS
-    // ════════════════════════════════════════════════════════════════
-    function switchTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-      document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
-      document.getElementById(tab).classList.add("active");
-      event.target.classList.add("active");
-    }
-
-    // ════════════════════════════════════════════════════════════════
-    //  MODAL
-    // ════════════════════════════════════════════════════════════════
-    let currentFundId = null;
-    function openModal(fundId, name, emoji) {
-      currentFundId = fundId;
-      document.getElementById("modal-title").textContent = `${emoji} ${name}`;
-      document.getElementById("modal-amount").value = "";
-      document.getElementById("modal").classList.remove("hidden");
-      document.getElementById("modal-amount").focus();
-    }
-    function closeModal() {
-      document.getElementById("modal").classList.add("hidden");
-    }
-    function saveDeposit() {
-      const amount = parseFloat(document.getElementById("modal-amount").value.replace(/\./g, "").replace(",", ".")) || 0;
-      if (amount > 0) {
-        const fund = funds.find(f => f.id === currentFundId);
-        if (fund) {
-          fund.amount += amount;
-          saveData();
-          render();
-          closeModal();
+<!-- ── PWA: Service Worker ── -->
+<script>
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  const SW = `
+const CACHE = 'emmapel-manual-v1';
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => c.add(self.location.href.split('?')[0]))
+      .then(() => self.skipWaiting())
+  );
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+self.addEventListener('fetch', e => {
+  if(e.request.method !== 'GET') return;
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      const net = fetch(e.request).then(r => {
+        if(r && r.status === 200 && r.type === 'basic'){
+          caches.open(CACHE).then(c => c.put(e.request, r.clone()));
         }
-      }
-    }
+        return r;
+      }).catch(() => cached);
+      return cached || net;
+    })
+  );
+});
+`;
+  try{
+    const blob = new Blob([SW], {type: 'application/javascript'});
+    const url  = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url, {scope: './'})
+      .then(reg => {
+        reg.addEventListener('updatefound', () => {
+          const w = reg.installing;
+          w.addEventListener('statechange', () => {
+            if(w.state === 'installed' && navigator.serviceWorker.controller){
+              const bar = document.createElement('div');
+              bar.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#AAFF00;color:#0D1B4B;text-align:center;padding:10px;font-weight:700;font-size:13px;z-index:9999;cursor:pointer;';
+              bar.textContent = '🔄 Hay una version nueva, toca para actualizar';
+              bar.onclick = () => window.location.reload();
+              document.body.appendChild(bar);
+            }
+          });
+        });
+      })
+      .catch(() => {});
+  } catch(e) {}
+})();
 
-    // ════════════════════════════════════════════════════════════════
-    //  CALCULADORAS
-    // ════════════════════════════════════════════════════════════════
-    function fmt$(n) { return "$" + Math.round(n).toLocaleString("es-AR"); }
-    function fmtUSD(n) { return "USD " + Math.round(n).toLocaleString("es-AR"); }
-    function parseAmt(s) { return parseFloat(String(s).replace(/\./g, "").replace(",", ".")) || 0; }
-    function calcFV(c, a, t, m) { if (m<=0) return c; if (t<=0) return c+a*m; const r=t/100, f=Math.pow(1+r,m); return c*f+a*(f-1)/r; }
-    function calcCuota(c,t,n) { if (n<=0) return 0; if (t<=0) return c/n; const r=t/100; return c*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1); }
+// iOS install nudge
+(function(){
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone;
+  if(isIos && !isStandalone && !localStorage.getItem('manualNudge')){
+    setTimeout(() => {
+      const bar = document.createElement('div');
+      bar.style.cssText = 'position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px));left:12px;right:12px;background:#0D1B4B;color:#fff;border-radius:14px;padding:12px 14px;font-size:13px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;gap:10px;align-items:center;';
+      bar.innerHTML = '<span style="font-size:20px">&#128242;</span><span style="flex:1;line-height:1.4">Instala la app: toca <b>Compartir</b> y <b>Agregar a inicio</b></span><span onclick="this.parentNode.remove();localStorage.setItem('manualNudge',1)" style="font-size:22px;cursor:pointer;opacity:.5">&#x2715;</span>';
+      document.body.appendChild(bar);
+    }, 4000);
+  }
+})();
 
-    function calcularPorcentaje() {
-      const num = parseAmt(document.getElementById("pct-numero").value);
-      const pct = parseFloat(document.getElementById("pct-valor").value) || 0;
-      const res = num * pct / 100;
-      document.getElementById("pct-resultado").innerHTML = `<div class="result-box"><div class="result-amount">${fmt$(res)}</div><div class="result-desc">${pct.toFixed(1)}% de ${fmt$(num)} = ${fmt$(res)}</div></div>`;
-    }
-
-    function calcularDias() {
-      const fecha = document.getElementById("dias-fecha").value;
-      if (!fecha) return;
-      const hoy = new Date(); hoy.setHours(0,0,0,0);
-      const dest = new Date(fecha + "T00:00:00");
-      const dias = Math.round((dest - hoy) / 86400000);
-      document.getElementById("dias-resultado").innerHTML = `<div class="result-box"><div class="result-amount">${dias} días</div><div class="result-desc">${(dias/7).toFixed(1)} semanas · ${(dias/30.44).toFixed(1)} meses</div></div>`;
-    }
-
-    function calcularConversor() {
-      const cant = parseAmt(document.getElementById("conv-cantidad").value);
-      const de = document.getElementById("conv-de").value;
-      const res = de === "pesos" ? cant / rates.USD : cant * rates.USD;
-      const label = de === "pesos" ? fmtUSD(res) : fmt$(res);
-      document.getElementById("conv-resultado").innerHTML = `<div class="result-box"><div class="result-amount">${label}</div></div>`;
-    }
-
-    function calcularInflacion() {
-      const valor = parseAmt(document.getElementById("inf-valor").value);
-      const tasa = parseFloat(document.getElementById("inf-tasa").value) || 0;
-      const meses = parseInt(document.getElementById("inf-meses").value) || 1;
-      const futuro = valor * Math.pow(1 + tasa/100, meses);
-      const perdida = (futuro - valor) / valor * 100;
-      document.getElementById("inf-resultado").innerHTML = `<div class="result-box"><div class="result-amount" style="color: #E11D48;">${fmt$(futuro)}</div><div class="result-desc" style="color: #9F1239;">Pérdida de poder adquisitivo: ${perdida.toFixed(1)}%</div></div>`;
-    }
-
-    function calcularTC() {
-      const tc = parseFloat(document.getElementById("tc-actual").value) || 1420;
-      const suba = parseFloat(document.getElementById("tc-suba").value) || 0;
-      const meses = parseInt(document.getElementById("tc-meses").value) || 1;
-      const tcFut = tc * Math.pow(1 + suba/100, meses);
-      document.getElementById("tc-resultado").innerHTML = `<div class="result-box"><div class="result-amount" style="color: #B45309;">$${Math.round(tcFut).toLocaleString("es-AR")}/USD</div><div class="result-desc" style="color: #92400E;">Sube ${((tcFut/tc-1)*100).toFixed(1)}% en total</div></div>`;
-    }
-
-    function calcularCuotas() {
-      const cap = parseAmt(document.getElementById("cuota-capital").value);
-      const tasa = parseFloat(document.getElementById("cuota-tasa").value) || 0;
-      const cuotas = parseInt(document.getElementById("cuota-numero").value) || 1;
-      const cuota = calcCuota(cap, tasa, cuotas);
-      const total = cuota * cuotas;
-      const intereses = total - cap;
-      document.getElementById("cuota-resultado").innerHTML = `<div class="result-box"><div class="result-amount">${fmt$(cuota)}</div><div class="result-desc">Cuota mensual · Total: ${fmt$(total)} · Intereses: ${fmt$(intereses)}</div></div>`;
-    }
-
-    function calcularInteresCompuesto() {
-      const cap = parseAmt(document.getElementById("intcomp-capital").value);
-      const tasa = parseFloat(document.getElementById("intcomp-tasa").value) || 0;
-      const meses = parseInt(document.getElementById("intcomp-meses").value) || 1;
-      const fin = calcFV(cap, 0, tasa, meses);
-      const int = fin - cap;
-      document.getElementById("intcomp-resultado").innerHTML = `<div class="result-box"><div class="result-amount" style="color: #16A34A;">${fmt$(fin)}</div><div class="result-desc" style="color: #15803D;">Capital: ${fmt$(cap)} · Ganado: ${fmt$(int)} (${(int/cap*100).toFixed(1)}%)</div></div>`;
-    }
-
-    function calcularRendimientoReal() {
-      const nom = parseFloat(document.getElementById("real-nominal").value) || 0;
-      const inf = parseFloat(document.getElementById("real-inflacion").value) || 0;
-      const real = ((1 + nom/100) / (1 + inf/100) - 1) * 100;
-      const pos = real >= 0;
-      document.getElementById("real-resultado").innerHTML = `<div class="result-box" style="${pos ? 'background: #F0FDF4; border-color: #BBF7D0;' : 'background: #FFF1F2; border-color: #FECDD3;'}"><div class="result-amount" style="color: ${pos ? '#16A34A' : '#E11D48'};">${pos ? '+' : ''}${real.toFixed(2)}%/mes</div></div>`;
-    }
-
-    function calcularSimulador() {
-      const cap = parseAmt(document.getElementById("sim-capital").value);
-      const aho = parseAmt(document.getElementById("sim-ahorro").value);
-      const tasa = parseFloat(document.getElementById("sim-tasa").value) || 0;
-      const meses = parseInt(document.getElementById("sim-meses").value) || 1;
-      const scenarios = [
-        { label: "Conservador", delta: -1.5, color: "#64748B" },
-        { label: "Base", delta: 0, color: "#16A34A" },
-        { label: "Optimista", delta: 1.5, color: "#D97706" }
-      ];
-      let html = "";
-      scenarios.forEach(s => {
-        const t = Math.max(0.01, tasa + s.delta);
-        const fin = calcFV(cap, aho, t, meses);
-        html += `<div class="result-box" style="background: ${s.color}15; border-color: ${s.color}40; margin-top: 12px;"><div style="color: ${s.color}; font-weight: 700; margin-bottom: 4px;">${s.label} (${t.toFixed(1)}%)</div><div class="result-amount" style="color: ${s.color};">${fmt$(fin)}</div></div>`;
-      });
-      document.getElementById("simulador-resultados").innerHTML = html;
-    }
-
-    function calcularCuandoMeta() {
-      const tengo = parseAmt(document.getElementById("meta-tengo").value);
-      const ahorro = parseAmt(document.getElementById("meta-ahorro").value);
-      const tasa = parseFloat(document.getElementById("meta-tasa").value) || 0;
-      const meta = parseAmt(document.getElementById("meta-meta").value);
-      if (tengo >= meta) {
-        document.getElementById("meta-resultado").innerHTML = `<div class="result-box"><div class="result-amount" style="color: #16A34A;">🎉 ¡Ya llegaste!</div></div>`;
-        return;
-      }
-      let cur = tengo, m = 0;
-      const r = tasa / 100;
-      while (cur < meta && m < 1200) { cur = cur * (1 + r) + ahorro; m++; }
-      if (m < 1200) {
-        const fechaMeta = new Date(); fechaMeta.setMonth(fechaMeta.getMonth() + m);
-        document.getElementById("meta-resultado").innerHTML = `<div class="result-box"><div class="result-amount">${m} meses</div><div class="result-desc">${fechaMeta.toLocaleString("es-AR", {month:"long", year:"numeric"})} · ${(m/12).toFixed(1)} años</div></div>`;
-      }
-    }
-
-    // ════════════════════════════════════════════════════════════════
-    //  INIT
-    // ════════════════════════════════════════════════════════════════
-    document.addEventListener("DOMContentLoaded", () => {
-      loadData();
-      render();
-
-      document.getElementById("tc-input").addEventListener("change", (e) => {
-        rates.USD = parseFloat(e.target.value) || 1420;
-        saveData();
-        render();
-      });
-
-      document.getElementById("conversor-toggle").addEventListener("click", () => {
-        conversorOpen = !conversorOpen;
-        const grid = document.getElementById("conversor-grid");
-        if (conversorOpen) {
-          grid.classList.remove("hidden");
-          document.getElementById("conversor-toggle").textContent = "Ocultar ▲";
-        } else {
-          grid.classList.add("hidden");
-          document.getElementById("conversor-toggle").textContent = "Mostrar ▼";
-        }
-      });
-
-      document.getElementById("modal-save").addEventListener("click", saveDeposit);
-      document.getElementById("modal-amount").addEventListener("keypress", (e) => { if (e.key === "Enter") saveDeposit(); });
-      document.getElementById("modal").addEventListener("click", (e) => { if (e.target === document.getElementById("modal")) closeModal(); });
-    });
-  </script>
+// Android install prompt
+var _installPrompt;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _installPrompt = e;
+  if(localStorage.getItem('manualNudge')) return;
+  setTimeout(function() {
+    if(!_installPrompt) return;
+    var bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px));left:12px;right:12px;background:#0D1B4B;color:#fff;border-radius:14px;padding:12px 14px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.3);';
+    bar.innerHTML = '<div style="display:flex;gap:10px;align-items:center;margin-bottom:10px"><span style="font-size:20px">&#128242;</span><span style="font-size:13px">Instala el manual como app en tu telefono</span></div><div style="display:flex;gap:8px"><button onclick="_installPrompt.prompt();_installPrompt=null;this.parentNode.parentNode.remove()" style="flex:1;background:#AAFF00;color:#0D1B4B;border:none;border-radius:8px;padding:9px;font-weight:700;font-size:13px;cursor:pointer;">Instalar</button><button onclick="localStorage.setItem('manualNudge',1);this.parentNode.parentNode.remove()" style="background:rgba(255,255,255,.1);color:#fff;border:none;border-radius:8px;padding:9px;font-size:13px;cursor:pointer;">Ahora no</button></div>';
+    document.body.appendChild(bar);
+  }, 4000);
+});
+</script>
 
 </body>
 </html>
